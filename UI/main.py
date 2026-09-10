@@ -75,7 +75,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
 
         # ===================================================
-        # TAB TCP CLIENT — widgets__)
+        # TAB TCP CLIENT — widgets__)_
         # ===================================================
         self.btn_connect = self.ui.btn_connect
         self.txt_IP      = self.ui.txt_IP
