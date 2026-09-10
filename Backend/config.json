@@ -1,0 +1,17 @@
+{
+    "DOBOT_LINE_1": {
+        "keyword": "DRB_",
+        "separator": ",",
+        "mapping": {
+            "0": "machine",
+            "1": "model",
+            "2": "total",
+            "3": "qtyOk",
+            "4": "qtyNg",
+            "5": "rate",
+            "6": "shifts",
+            "7": "date",
+            "8": "time"
+        }
+    }
+}
