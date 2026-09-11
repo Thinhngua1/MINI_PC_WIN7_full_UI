@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net" agent="Antigravity">
+  <diagram id="mvvm-architecture" name="MVVM Industrial Architecture">
+    <mxGraphModel dx="1030" dy="559" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ViewLayer" parent="1" style="swimlane;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;startSize=40;" value="VIEW LAYER (PyQt5 Widgets)&#xa;Hiển thị UI, nhận sự kiện người dùng" vertex="1">
+          <mxGeometry height="400" width="300" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="v1" parent="ViewLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="MainWindow" vertex="1">
+          <mxGeometry height="40" width="140" x="80" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="v2" parent="ViewLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="LineCardWidget (x máy)" vertex="1">
+          <mxGeometry height="40" width="140" x="80" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="v3" parent="ViewLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="SummaryWidget" vertex="1">
+          <mxGeometry height="40" width="140" x="80" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="VMLayer" parent="1" style="swimlane;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;startSize=40;" value="VIEWMODEL LAYER&#xa;Quản lý trạng thái, tính toán logic hiển thị" vertex="1">
+          <mxGeometry height="400" width="300" x="440" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vm1" parent="VMLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="DashboardViewModel&lt;br&gt;(Tổng OK/NG, OEE, Clock)" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vm2" parent="VMLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="LineViewModel (x máy)&lt;br&gt;(Tên máy, tên model, OK/NG,rate)" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="ModelLayer" parent="1" style="swimlane;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;startSize=40;" value="MODEL LAYER (Data &amp; Core Logic)&#xa;Xử lý dữ liệu thô, Mạng, IO" vertex="1">
+          <mxGeometry height="400" width="300" x="840" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" parent="ModelLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="TcpServerModel&#xa;(Lắng nghe kết nối TCP)" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" parent="ModelLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="DataParserModel&#xa;(Phân tích CSV)" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" parent="ModelLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="ApiPublisherModel&#xa;(POST HTTP SQL Server)" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="VMLayer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;dashed=1;fontColor=#FF6600;strokeColor=#FF6600;" target="ViewLayer" value="Data Binding&#xa;(Qt Signals/Slots)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="120" />
+              <mxPoint x="400" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="m1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;" target="m2" value="Dữ liệu thô (Raw)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="m2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;strokeColor=#0000FF;" target="vm1" value="Dữ liệu đã phân tích&#xa;(Dict/Object)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="230" />
+              <mxPoint x="800" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="m2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;" target="m3" value="Gửi đi lưu SQL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lah_4OU5zq6PsqlGkUME-4" edge="1" parent="1" source="lah_4OU5zq6PsqlGkUME-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="m1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lah_4OU5zq6PsqlGkUME-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;div&gt;Robot(client)&lt;/div&gt;(format: Tên máy, tên model, OK/NG,rate, ngày, ngày giờ)" vertex="1">
+          <mxGeometry height="60" width="200" x="1220" y="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
