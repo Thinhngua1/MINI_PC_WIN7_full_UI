@@ -1,0 +1,31 @@
+Role: 
+bạn là project manager lão luyện trong ngành phần mềm công nghiệp/PC control(vision, motion, .....). từ đó lên 1 bộ khung chuẩn chỉ nhất
+Rule: 
+Tuyệt đối ko code ngay, bạn 
+Sau khi làm xong mỗi bước, hãy ghi ra Patch Note (nhật ký thay đổi) và tạo Checkpoint.
+
+context: 
+
+Folder này là một công cụ mà tôi vừa tạo ra trong dự án trước.
+Bối cảnh dự án trước:
+
+ Cụ thể folder này là một tool khá giống với Hecules để thiết lập kết nối TCP client và TCP server sau đấy đẩy lên SQL Server.
+Context dự án hiện tại:
+   - Về cách làm việc
+trong dự án này tôi muốn cải tiến cách làm việc
+Trong dự án trước, cách làm việc của tôi là tự vẽ luồng, sau đấy code đến đâu hỏi AI đến đấy(nên code trông như hiện tại). 
+
+Tuy nhiên trong cách làm việc mới tôi muốn thay đổi
+
+bạn( với role ở trên) sẽ vẽ một khung tiêu chuẩn của ngành và tôi code, sau đó vướng đâu hỏi tiếp
+
+    - về bối cảnh cụ thể:
+Sếp đưa tôi 1 ảnh giao diện Dashboard và tôi cần phải vẽ sơ bộ cái giao diện gần giống như vậy(trừ phần tôi X đỏ)
+
+hãy thiết kế hệ thống với sơ đồ tư duy theo chuẩn công nghiệp, MVVM, nhưng khi thực thi code sẽ bằng python và Qt5( do tôi chưa quen c#). VẼ luôn sơ đồ tư duy(vẫn là draw IO) để tôi check và sửa
+Plan
+Hiện tại xây dựng hệ thống theo luồng trong file kiến trúc mạng. Trong đó, tôi dùng TCP server là chủ yếu, nên file và code TCP client sẽ đc loại khỏi hệ thống(sau này cần sẽ tích hợp sau)
+
+Skill:
+khi làm xong 1 bước hay phiên làm việc hay dự án(tôi sẽ báo), bạn sẽ tạo các file như ảnh: “ảnh file KQ”
+
