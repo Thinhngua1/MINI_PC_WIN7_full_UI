@@ -36,3 +36,14 @@
 
 ### Kế hoạch tương lai (Future To-Do)
 - **Settings UI (Bảng cài đặt admin)**: Tính năng thay đổi số lượng máy (total_lines) hiện tại gán cố định trong file config để đảm bảo an toàn. Khi hệ thống mở rộng, sẽ thiết kế 1 tab Settings bảo mật bằng mật khẩu trên màn hình. Cho phép Admin nhập số lượng máy mới và lưu ngược về Model (ứng dụng Two-Way Binding).
+
+## [CHECKPOINT] - Điểm lưu trạng thái (Tiếp tục tại nhà)
+**Trạng thái hệ thống hiện tại:**
+- Kiến trúc đang tuân thủ: MVVM, chia luồng độc lập, gán biến bằng Two-Way Binding.
+- Đã test thành công luồng: TCP Server -> Data Parser -> DashboardViewModel.
+- Đã nắm được cách Wiring (Đấu dây tín hiệu) chuẩn trong file main.py.
+
+**Nhiệm vụ tiếp theo (Đang làm dở):**
+Hoàn thiện hàm calculate_summary(self) trong iewmodels/dashboard_vm.py để tính Tổng toàn nhà máy.
+- **Thuật toán cần code:** Lặp qua 12 LineViewModel -> Cộng dồn ok_count, 
+g_count -> Tính tỷ lệ OEE -> Đếm máy đang RUNNING -> Đóng gói vào Dict -> Phát tín hiệu signal_summary_updated.
