@@ -56,6 +56,8 @@ class DataParserModel:
                             extracted_data[field_name] = parts[idx]
 
                     print(f"extracted_data: {extracted_data}")
+                    
+
                     return extracted_data # Gọi 1 lần duy nhất và trả về kết quả
                     {'machine': 'DRB_02', 'model': 'A175', 'total': '1000', 'qtyOk': '650',
                       'qtyNg': '350', 'rate': '65', 'shifts': '1', 'date': '2025-12-12', 'time': '2025-12-12 09:09:10', 'message':'wait_material'}
@@ -66,6 +68,75 @@ class DataParserModel:
             print(f"[DataParser] Lỗi phân tích dữ liệu: {e}")
             return None 
 
+    # def _save_to_json(self):
+    #     # tao file json(vd: log_2026-08-30.json)
+    #     today_str = datetime.now().strftime("%Y-%m-%d")
+
+    #     dir = os.path.dirname(os.path.abspath(__file__))
+    #     parent_dir = os.path.dirname(dir)
+    #     filename = os.path.join(parent_dir, f"log_{today_str}.json")
+
+    #     # Cấu trúc 1 dòng JSON ghi xuống file
+    #     log_data = {
+    #         "message": self.extracted_data
+    #     }
+
+    #     # GHi log: Dùng Lock để đảm bảo an toàn khi các luồng ngầm ghi file cùng lúc
+    #     with self.lock:
+    #         with open(filename, "a", encoding="utf-8") as f:
+    #             # Ghi dưới dạng JSON Lines (mỗi đối tượng JSON là 1 dòng)
+    #             f.write(json.dumps(log_data, ensure_ascii=False) + "\n")
+
+    # def _send_to_api(self):
+    #     url = "http://192.168.130.236:8010/Product"
+        
+    #     headers = {
+    #         "Connection": "Keep-Alive",
+    #         "Content-Type": "application/json",
+    #         "User-Agent": "CTC_Client/1.0"
+    #         # Content-Length và Host: thư viện requests tự điền, không cần khai báo
+    #     }
+        
+    #     # Ép kiểu đúng định dạng IT yêu cầu trước khi gửi
+    #     payload = {
+    #         "machine" : str(self.extracted_data.get("machine", "")),
+    #         "model"   : str(self.extracted_data.get("model", "")),
+    #         "total"   : int(self.extracted_data.get("total", 0)),
+    #         "qtyOk"   : int(self.extracted_data.get("qtyOk", 0)),
+    #         "qtyNg"   : int(self.extracted_data.get("qtyNg", 0)),
+    #         "rate"    : float(self.extracted_data.get("rate", 0.0)),
+    #         "shifts"  : str(self.extracted_data.get("shifts", "")),
+    #         "date"    : datetime.now().strftime("%Y-%m-%d"),
+    #         "time"    : datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #     }
+
+    #     try:
+            
+    #         response = requests.post(url, json=payload, headers=headers, timeout=5)
+            
+    #         if response.status_code == 201:
+    #             self.data_rcv_SQL = (
+    #                 f"{self.prefix} [API] Server trả về: "
+    #                 f"{response.status_code} - {response.text}"
+    #             )
+    #             return self.data_rcv_SQL
+    #         else:
+    #             self.data_rcv_SQL = (
+    #                 f"{self.prefix} [API] Gửi SQL thất bại: "
+    #                 f"{response.status_code} - {response.text}"
+    #             )   
+    #             return self.data_rcv_SQL        
+                            
+    #     except requests.exceptions.ConnectionError:
+    #         self.data_rcv_SQL = (f"{self.prefix} [API] Loi: Khong ket noi duoc toi server IT")
+    #         return self.data_rcv_SQL   
+            
+    #     except requests.exceptions.Timeout:
+    #         self.data_rcv_SQL = (f"{self.prefix} [API] Loi: Server IT khong phan hoi (timeout 5s)")
+    #         return self.data_rcv_SQL 
+    #     except Exception as e:
+    #         self.data_rcv_SQL = (f"{self.prefix} [API] Loi khong xac dinh: {e}")
+    #         return self.data_rcv_SQL
 
 if __name__ == "__main__":
     # Import các module cần thiết để test
