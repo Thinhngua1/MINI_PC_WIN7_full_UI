@@ -32,6 +32,12 @@ QLabel {
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="lbl_machine_id">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <family>Arial</family>
@@ -43,27 +49,21 @@ QLabel {
      <property name="text">
       <string>LINE 01 </string>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>20</height>
-      </size>
-     </property>
     </widget>
    </item>
    <item>
     <widget class="Line" name="line">
-     <property name="styleSheet">
-      <string>background-color: #1c3b5a;</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
        <height>2</height>
       </size>
+     </property>
+     <property name="styleSheet">
+      <string>background-color: #1c3b5a;</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -246,7 +246,7 @@ QLabel {
         <string notr="true">
 QLabel {
     border: 4px solid #1c3b5a;
-    border-radius: 40px;
+    //border-radius: 40px;
     background-color: transparent;
     color: white;
 }

@@ -1,7 +1,6 @@
 import os
 from PyQt5.QtWidgets import QMainWindow, QWidget
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
 
 class MainWindow(QMainWindow):
     def __init__(self, dashboard_vm):
@@ -66,16 +65,6 @@ class MainWindow(QMainWindow):
         card_widget.lbl_total_count.setText(str(line_vm.total_count))
         card_widget.lbl_rate.setText(f"{line_vm.rate}%")
 
-        # Đổi màu vòng tròn Rate dựa trên trạng thái
-        if line_vm.status == "RUNNING":
-            card_widget.lbl_rate.setStyleSheet("border: 4px solid #00ff00; border-radius: 40px; background-color: transparent; color: white;")
-        elif line_vm.status == "OFFLINE":
-            card_widget.lbl_rate.setStyleSheet("border: 4px solid #555555; border-radius: 40px; background-color: transparent; color: white;")
-        elif line_vm.status == "ALARM":
-            card_widget.lbl_rate.setStyleSheet("border: 4px solid #ff3333; border-radius: 40px; background-color: transparent; color: white;")
-        else:
-            card_widget.lbl_rate.setStyleSheet("border: 4px solid #ffaa00; border-radius: 40px; background-color: transparent; color: white;")
-
     def update_summary_ui(self, summary_data):
         """Cập nhật phần Summary chung ở trên cùng."""
         self.lbl_sum_total.setText(str(summary_data['total_machine']))
@@ -84,9 +73,6 @@ class MainWindow(QMainWindow):
         self.lbl_sum_alarm.setText(str(summary_data['machine_Alarm']))
         self.lbl_sum_offline.setText(str(summary_data['machine_offline']))
         
-        # Calculate overall OEE logic (mocked as simple average for now, replace with true logic if needed)
-        total_ok = summary_data.get('machine_OK', 0)
-        total_ng = summary_data.get('machine_NG', 0)
         overall_oee = 0.0
         # Cần logic tính OEE từ Model/ViewModel, tạm fix cứng OEE nếu chưa có data
         self.lbl_sum_oee.setText(f"{overall_oee:.1f}%")

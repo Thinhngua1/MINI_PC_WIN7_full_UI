@@ -21,7 +21,8 @@
                 "5": "rate",
                 "6": "shifts",
                 "7": "date",
-                "8": "time"
+                "8": "time",
+                "9": "Status"
             }
         }
     },

@@ -66,23 +66,22 @@ class DashboardViewModel(QObject):
         total_machine = len(self.lines) 
         
         machine_running = 0
-        
-        machine_NG = 0
+        machine_offline = 0
         machine_Alarm =  0
         machine_WAITING_Material =  0
                               
         # 2. duyệt qua các line
         for line in self.lines.values():
             if line.status == "RUNNING":
-                machine_running += 1;
-        machine_OK = machine_running 
-        machine_offline = total_machine - machine_running
+                machine_running += 1
+            if line.status == "OFFLINE":
+                machine_offline += 1
+
+        
 
         # nhét vào dict
         summary_str = {
             "total_machine":total_machine,
-            "machine_OK":machine_OK,
-            "machine_NG":machine_NG,
             "machine_Alarm":machine_Alarm,
             "machine_WAITING":machine_WAITING_Material,
             "machine_running": machine_running,
@@ -111,7 +110,6 @@ if __name__ == "__main__":
     # ====================================================
     # 1: Tự import lớp TcpServerModel và DashboardViewModel vào đây
     from models.tcp_server import TcpServerModel
-    from models.data_parser import DataParserModel
 
     app = QApplication(sys.argv)
     
