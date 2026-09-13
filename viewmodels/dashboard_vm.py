@@ -72,10 +72,13 @@ class DashboardViewModel(QObject):
                               
         # 2. duyệt qua các line
         for line in self.lines.values():
-            if line.status == "RUNNING":
-                machine_running += 1
             if line.status == "OFFLINE":
                 machine_offline += 1
+            elif line.status == "RUNNING":
+                if line.message == 'wait_material':
+                    machine_WAITING_Material +=1
+                machine_running += 1
+            
 
         
 

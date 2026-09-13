@@ -110,13 +110,6 @@ QPushButton:checked {
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="btn_Equipment">
-             <property name="text">
-              <string>Equipment</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="btn_AlarmHistory">
              <property name="text">
               <string>Alarm History</string>
@@ -127,13 +120,6 @@ QPushButton:checked {
             <widget class="QPushButton" name="btn_Production">
              <property name="text">
               <string>Production</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_AGVSystem">
-             <property name="text">
-              <string>AGV System</string>
              </property>
             </widget>
            </item>
