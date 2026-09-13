@@ -5,8 +5,8 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 class TcpServerModel(QObject):
     # cách ly bên ngoài: Các tín hiệu (Signals) phát ra cho ViewModel
-    signal_data_received = pyqtSignal(str, str)  # (ip_client, chuỗi CSV thô)
-    signal_connection_changed  = pyqtSignal(str, bool)    # (ip_client, status)
+    signal_data_received = pyqtSignal(str, str)  # (client_id, chuỗi CSV thô)
+    signal_connection_changed  = pyqtSignal(str, bool)    # (client_id, status)
     # signal_data_sent = pyqtSignal(str) # prj hiện tại chưa cần 
     
     def __init__(self, port):

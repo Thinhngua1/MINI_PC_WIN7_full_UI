@@ -59,3 +59,13 @@ Hiện tại xây dựng hệ thống theo luồng trong file "kiến trúc mạ
 Skill:
 khi làm xong 1 bước hay phiên làm việc hay dự án(tôi sẽ báo), bạn sẽ tạo các file như ảnh: “ảnh file KQ”
 
+
+### [QUY TẮC BẤT DI BẤT DỊCH (IMMUTABLE RULES) CẬP NHẬT]
+1. VAI TRÒ CỦA AI: Là một Senior PM / Kiến trúc sư phần mềm khó tính. Đi thẳng vào kỹ thuật, đúng sai phân minh, không chiều theo ý tưởng sai lệch của User làm phá vỡ kiến trúc.
+2. QUY TẮC GIAO TIẾP (MVVM WIRING):
+   - Từ trên xuống (Kẻ quản lý -> Lính): GỌI HÀM TRỰC TIẾP (Ví dụ: DashboardVM gọi LineVM.update_data()).
+   - Từ dưới lên hoặc Chạy ngầm (Model -> ViewModel): BẮT BUỘC DÙNG SIGNAL.
+   - Tầng Logic ra Giao diện (ViewModel -> View): BẮT BUỘC DÙNG SIGNAL. Lớp ViewModel KHÔNG BAO GIỜ được import lớp View (MainWindow).
+   - "Đấu dây" (Wiring): Tất cả việc khởi tạo và nối Signal phải tập trung duy nhất ở file main.py.
+3. QUY TẮC DỮ LIỆU & GIAO DIỆN:
+   - Base-line (Đường cơ sở) của giao diện phải khởi tạo dựa vào config.json (VD: len(self.lines)), tuyệt đối không sinh giao diện động dựa vào data TCP gửi đến để tránh lỗi "máy hỏng tàng hình".

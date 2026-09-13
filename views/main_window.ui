@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>FactoryMonitor - Production Overview</string>
+  </property>
+  <property name="styleSheet">
+   <string>
+QMainWindow {
+    background-color: #05101d;
+}
+QWidget {
+    color: white;
+    font-family: Arial, sans-serif;
+}
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_Main" stretch="1,5">
+    <item>
+     <widget class="QFrame" name="frame_Sidebar">
+      <property name="styleSheet">
+       <string>
+QFrame#frame_Sidebar {
+    background-color: #0b1a2a;
+}
+QPushButton {
+    text-align: left;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    font-size: 11px;
+}
+QPushButton:hover {
+    background-color: #1c3b5a;
+}
+QPushButton:checked {
+    background-color: #1c3b5a;
+    border-left: 3px solid red;
+}
+       </string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_Sidebar">
+       <item>
+        <widget class="QLabel" name="lbl_Logo">
+         <property name="font">
+          <font>
+           <family>Arial</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string>color: #4da6ff; padding: 10px;</string>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;PBA ASSY &lt;/p&gt;&lt;p&gt;DREAMTECH&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="scrollArea_Sidebar">
+         <property name="styleSheet">
+          <string>QScrollArea { border: none; background-color: transparent; } QWidget#scrollAreaWidgetContents_Sidebar { background-color: transparent; }</string>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_Sidebar">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>187</width>
+            <height>410</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_SidebarButtons">
+           <property name="spacing">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="btn_LineMonitor">
+             <property name="styleSheet">
+              <string>border: 1px solid red; border-radius: 10px; text-align: center;</string>
+             </property>
+             <property name="text">
+              <string>Line Monitor</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_Equipment">
+             <property name="text">
+              <string>Equipment</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_AlarmHistory">
+             <property name="text">
+              <string>Alarm History</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_Production">
+             <property name="text">
+              <string>Production</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_AGVSystem">
+             <property name="text">
+              <string>AGV System</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_Quality">
+             <property name="text">
+              <string>Quality</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_EnergyMonitor">
+             <property name="text">
+              <string>Energy Monitor</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_Trend">
+             <property name="text">
+              <string>Trend</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_DataLog">
+             <property name="text">
+              <string>Data Log</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_Legend">
+         <property name="styleSheet">
+          <string>border: 1px solid #1c3b5a; padding: 5px;</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_Legend">
+          <item>
+           <widget class="QLabel" name="lbl_LegendTitle">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string>border: none;</string>
+            </property>
+            <property name="text">
+             <string>LEGEND</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbl_LegendRun">
+            <property name="styleSheet">
+             <string>border: none; font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;• RUN&lt;/p&gt;&lt;p&gt;  Đang sản xuất&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbl_LegendIdle">
+            <property name="styleSheet">
+             <string>border: none; font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;• IDLE / WAIT&lt;/p&gt;&lt;p&gt;  Chờ nguyên vật liệu&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_Main">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_Top">
+        <item>
+         <widget class="QLabel" name="lbl_MainTitle">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>AUTO INLINE PRODUCTION MONITORING</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_Top">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_Summary">
+        <property name="styleSheet">
+         <string>
+QFrame#frame_Summary {
+    border: 2px solid red;
+    border-radius: 5px;
+    background-color: #05101d;
+}
+QFrame#card_TotalLine, QFrame#card_Running, QFrame#card_Waiting, QFrame#card_Alarm, QFrame#card_Offline {
+    border-right: 1px solid #1c3b5a;
+    background-color: transparent;
+}
+QLabel {
+    border: none;
+}
+         </string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_Summary">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QFrame" name="card_TotalLine">
+           <layout class="QVBoxLayout" name="v1">
+            <item>
+             <widget class="QLabel" name="t1">
+              <property name="styleSheet">
+               <string>font-size: 10px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>TOTAL LINE</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_sum_total">
+              <property name="styleSheet">
+               <string>font-size: 24px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="card_Running">
+           <layout class="QVBoxLayout" name="v2">
+            <item>
+             <widget class="QLabel" name="t2">
+              <property name="styleSheet">
+               <string>font-size: 10px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>RUNNING</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_sum_running">
+              <property name="styleSheet">
+               <string>font-size: 24px; font-weight: bold; color: #00ff00;</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="card_Waiting">
+           <layout class="QVBoxLayout" name="v3">
+            <item>
+             <widget class="QLabel" name="t3">
+              <property name="styleSheet">
+               <string>font-size: 10px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>WAITING MATERIAL</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_sum_waiting">
+              <property name="styleSheet">
+               <string>font-size: 24px; font-weight: bold; color: #ffaa00;</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="card_Alarm">
+           <layout class="QVBoxLayout" name="v4">
+            <item>
+             <widget class="QLabel" name="t4">
+              <property name="styleSheet">
+               <string>font-size: 10px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>ALARM</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_sum_alarm">
+              <property name="styleSheet">
+               <string>font-size: 24px; font-weight: bold; color: #ff3333;</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="card_Offline">
+           <layout class="QVBoxLayout" name="v5">
+            <item>
+             <widget class="QLabel" name="t5">
+              <property name="styleSheet">
+               <string>font-size: 10px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>OFFLINE</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_sum_offline">
+              <property name="styleSheet">
+               <string>font-size: 24px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="card_OEE">
+           <layout class="QVBoxLayout" name="v6">
+            <item>
+             <widget class="QLabel" name="t6">
+              <property name="styleSheet">
+               <string>font-size: 10px; font-weight: bold;</string>
+              </property>
+              <property name="text">
+               <string>OVERALL OEE</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lbl_sum_oee">
+              <property name="styleSheet">
+               <string>font-size: 24px; font-weight: bold; color: #00ff00;</string>
+              </property>
+              <property name="text">
+               <string>0.0%</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="styleSheet">
+         <string>QScrollArea { border: none; background-color: transparent; } QWidget#scrollAreaWidgetContents { background-color: transparent; }</string>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>1040</width>
+           <height>574</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_machines">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>10</number>
+          </property>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

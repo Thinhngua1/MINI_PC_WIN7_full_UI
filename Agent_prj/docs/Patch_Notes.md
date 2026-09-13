@@ -47,3 +47,26 @@
 Hoàn thiện hàm calculate_summary(self) trong iewmodels/dashboard_vm.py để tính Tổng toàn nhà máy.
 - **Thuật toán cần code:** Lặp qua 12 LineViewModel -> Cộng dồn ok_count, 
 g_count -> Tính tỷ lệ OEE -> Đếm máy đang RUNNING -> Đóng gói vào Dict -> Phát tín hiệu signal_summary_updated.
+
+## [CHECKPOINT] - Nghiệm thu Tầng Backend (Model & ViewModel) - Kết thúc Phiên 1
+**Trạng thái hệ thống hiện tại (ĐÃ HOÀN THIỆN):**
+- **Model:** TcpServerModel xử lý kết nối, DataParserModel bóc tách CSV thành Dict.
+- **ViewModel:** 
+  - LineViewModel: Quản lý trạng thái từng máy (OK, NG, Status). Đã sửa lỗi biến và chuẩn hóa OOP.
+  - DashboardViewModel: Định tuyến data động theo machine_id. Hàm calculate_summary đếm tổng số máy, số máy RUNNING/OFFLINE và gán mock-data (Machine OK) chuẩn xác.
+- Đã test thành công việc đấu dây ngầm (Wiring) trong main.py. Mất mạng/Có mạng tự động trigger tính toán lại toàn bộ.
+
+**Nhiệm vụ cho Phiên làm việc tiếp theo (Tầng View - UI):**
+- [x] Sử dụng Qt Designer thiết kế 2 file: main_window.ui (Khung chính + Summary) và line_card.ui (Template thẻ máy).
+- [x] Sử dụng cơ chế load động Template: Đọc file line_card.ui N lần dựa trên số lượng máy trong cấu hình và nhét vào ScrollArea.
+- [x] Thực hiện Binding (Nối dây UI): Cắm Signal từ ViewModel vào các phần tử giao diện.
+
+## [CHECKPOINT] - Giai đoạn 4: Triển khai Tầng View (UI) Động 
+**Trạng thái hệ thống hiện tại:**
+- Đã cung cấp scaffolding cho `views/main_window.ui` và `views/line_card.ui`.
+- Đã viết class `views/main_window.py` có khả năng tự động load `.ui` template và nhồi vào lưới Grid Layout của Scroll Area.
+- Cập nhật lại `main.py` để khởi tạo View và truyền `DashboardViewModel` vào nhằm thực hiện cơ chế nối dây Signals (Binding) chuẩn MVVM.
+
+**Hướng dẫn phát triển tiếp:**
+- User mở Qt Designer chỉnh sửa thẩm mỹ cho 2 file UI (không đổi tên ObjectName để giữ Binding).
+- Bắt đầu chạy test thử từ file `main.py`.

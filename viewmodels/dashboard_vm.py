@@ -6,18 +6,19 @@ from viewmodels.line_vm import LineViewModel
 from models.data_parser import DataParserModel
 
 class DashboardViewModel(QObject):
-    signal_summary_updated = pyqtSignal(dict) # Phát tín hiệu tổng OK/NG/OEE
+    signal_summary_updated = pyqtSignal(dict) # Phát tín hiệu (Tổng/OK/NG/wait_material,alarm, running, offline)
 
     def __init__(self, machines_config): #machines_config đọc từ file config nhưng gọi từ hàm main(theo MVVM)
         super().__init__()
         self.parser = DataParserModel() # thuộc tính parser data
         # Khởi tạo động danh sách các LineViewModel dựa trên số lượng x máy
-        self.lines = {}
+        self.lines = {} # có dạng: { 'DRB_02': QObject của LineViewModel}
         #dict để check OFF line
-        self.clients = {}
+        self.clients = {}  # dạng: {'192.168.x.x:8500' : 'DRB_02'}
+
 
         for mac in machines_config:
-            self.lines[mac['id']] = LineViewModel(mac['id'])
+            self.lines[mac['id']] = LineViewModel(mac['id'], mac['name']) # khởi tạo các máy
 
     def handle_raw_data(self, client_id, raw_string):
         # 1. Gọi Parser dịch chuỗi -> Nhận về 1 cái Dict sạch sẽ
@@ -27,31 +28,68 @@ class DashboardViewModel(QObject):
         if not clean_dict:
             return 
             
-        machine_id = clean_dict.get("machine") # Ví dụ: lấy ra chữ 'DRB_02'
+        machine_id = clean_dict.get("machine") # Ví dụ: lấy ra name 'DRB_02'
 
         #1.5 ghi vào dict cái client_id  của client mới nhận 
-        self. clients[client_id] = machine_id
+        if client_id not in self.clients:
+            self.clients[client_id] = set() # tạo 1 set rỗng
+        self.clients[client_id].add(machine_id) # thêm tên máy nếu ko trùng lặp(IP, tên máy )
 
         # 2. Vứt data cho đúng ông Trưởng Line
         if machine_id in self.lines:
             # Gọi hàm update_data của LineViewModel và ném cái dict cho nó
             self.lines[machine_id].update_data(clean_dict)
-            
-        # 3. (Làm sau) Cộng dồn OK/NG của cả xưởng để tính Bảng Tổng
-
-
-    def handle_connection_changed(self, client_id, is_connected): # đọc từ signal_connection_changed of tcp
-        # TODO: Chuyển LineViewModel tương ứng sang OFFLINE
+        # update summary 
+        self.calculate_summary()
+        
+    def handle_connection_changed(self, client_id, is_connected): 
+        # Chuyển LineViewModel tương ứng sang OFFLINE
         if not is_connected:
-            #Mở sổ tay ra tra xem client_id bị rớt mạng là máy nào
-            machine_id = self.clients.get(client_id)
-            if machine_id and machine_id in self.lines:
-                # Gọi ông Trưởng Line đó, ép biến status thành OFFLINE
-                self.lines[machine_id].set_offline()
+            # Lấy ra cái Giỏ chứa các máy dùng chung client_id (hoặc giỏ rỗng nếu không có)
+            machine_ids = self.clients.get(client_id, set())
+            
+            # Duyệt qua từng máy trong giỏ và set OFFLINE
+            for machine_id in machine_ids:
+                if machine_id in self.lines:
+                    self.lines[machine_id].set_offline()
                 
-                # Xóa khỏi sổ tay
+            # Xóa giỏ khỏi sổ tay
+            if client_id in self.clients:
                 del self.clients[client_id]
-        pass
+                
+        # update summary  
+        self.calculate_summary()
+
+    
+    def calculate_summary(self):
+        #1. tạo các biến, thêm vào signal_summary_updated sau
+        total_machine = len(self.lines) 
+        
+        machine_running = 0
+        
+        machine_NG = 0
+        machine_Alarm =  0
+        machine_WAITING_Material =  0
+                              
+        # 2. duyệt qua các line
+        for line in self.lines.values():
+            if line.status == "RUNNING":
+                machine_running += 1;
+        machine_OK = machine_running 
+        machine_offline = total_machine - machine_running
+
+        # nhét vào dict
+        summary_str = {
+            "total_machine":total_machine,
+            "machine_OK":machine_OK,
+            "machine_NG":machine_NG,
+            "machine_Alarm":machine_Alarm,
+            "machine_WAITING":machine_WAITING_Material,
+            "machine_running": machine_running,
+            "machine_offline": machine_offline
+        }
+
+        self.signal_summary_updated.emit(summary_str)
 
 
 # ===================== đã test ok ==========
