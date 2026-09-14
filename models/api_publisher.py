@@ -1,12 +1,31 @@
 import requests
+import os
+import json
 from datetime import datetime
+from PyQt5.QtCore  import QObject, pyqtSignal
 
-class ApiPublisherModel:
-    def __init__(self):
-        pass
+class ApiPublisherModel(QObject):
+    signal_log_updated = pyqtSignal(str)
+
+    def __init__(self):      
+        super().__init__()# kế thừa cho signal
+    # Đọc file config một lần duy nhất lúc khởi động app
+        try:
+            #lay path config file
+            this_dir = os.path.dirname(os.path.abspath(__file__))
+            parent_dir = os.path.dirname(this_dir)   
+            config_path = os.path.join(parent_dir,"config", "config.json")
+
+            with open(config_path, "r", encoding="utf-8") as f:
+                self.config = json.load(f)
+        except Exception as e:
+            print("Lỗi đọc file config SQL:", e)
+            self.config = {}
+        
 
     def _send_to_api(self,extracted_data):
-        url = "http://192.168.130.236:8010/Product"
+        # url = "http://192.168.130.236:8010/Product"
+        url = self.config["sql_server"]['api_endpoint']
         
         headers = {
             "Connection": "Keep-Alive",
@@ -38,6 +57,7 @@ class ApiPublisherModel:
                     f"{response.status_code} - {response.text}"
                 )
                 print(self.data_rcv_SQL)
+                self.signal_log_updated.emit(self.data_rcv_SQL) # send to UI
                 return self.data_rcv_SQL
             else:
                 self.data_rcv_SQL = (
@@ -45,6 +65,7 @@ class ApiPublisherModel:
                     f"{response.status_code} - {response.text}"
                 )   
                 print(self.data_rcv_SQL)
+                self.signal_log_updated.emit(self.data_rcv_SQL) # send to UI
                 return self.data_rcv_SQL        
                                        
         except requests.exceptions.ConnectionError:

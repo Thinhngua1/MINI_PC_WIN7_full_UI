@@ -14,7 +14,9 @@ class LineViewModel(QObject):
         self.ng_count = 0
         self.rate = 0.0
         self.status = "OFFLINE"
+        self.type = ""  # <--- Bổ sung dòng này để lúc mới bật App lên nó rỗng
         self.message = "" # Chứa thông báo phụ của Robot
+        
 
     def update_data(self, parsed_data: dict):
         # Rút số liệu từ Dictionary và gán vào bản thân ông Trưởng Line
@@ -25,6 +27,7 @@ class LineViewModel(QObject):
         self.rate = parsed_data.get("rate", 0.0)          # 90.0
         self.status = "RUNNING" # sẽ đọc sau khi team robot chỉnh
         self.message = parsed_data.get("message", "") # Lấy key message từ Dobot
+        self.type = parsed_data.get("type", "Change Tray")
         
         # Báo cho View (Giao diện) biết tao vừa có số mới, hãy vẽ lại đi!
         self.signal_update_ui.emit()

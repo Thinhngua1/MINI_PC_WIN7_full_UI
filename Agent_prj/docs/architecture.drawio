@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Antigravity">
   <diagram id="mvvm-architecture" name="MVVM Industrial Architecture">
-    <mxGraphModel dx="858" dy="466" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+    <mxGraphModel dx="1212" dy="658" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -51,16 +51,22 @@
           <mxGeometry height="60" width="200" x="50" y="250" as="geometry" />
         </mxCell>
         <mxCell id="ModelLayer" parent="1" style="swimlane;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;startSize=40;" value="MODEL LAYER (Data &amp; Core Logic)&#xa;Xử lý dữ liệu thô, Mạng, IO" vertex="1">
-          <mxGeometry height="400" width="300" x="840" y="40" as="geometry" />
+          <mxGeometry height="400" width="360" x="840" y="40" as="geometry" />
         </mxCell>
         <mxCell id="m1" parent="ModelLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="TcpServerModel&#xa;(Lắng nghe kết nối TCP)" vertex="1">
           <mxGeometry height="60" width="200" x="50" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hUOhvdtTTBG6VjeqHNcI-2" edge="1" parent="ModelLayer" source="m2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="hUOhvdtTTBG6VjeqHNcI-1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="m2" parent="ModelLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="DataParserModel&#xa;(Phân tích CSV)" vertex="1">
           <mxGeometry height="60" width="200" x="50" y="160" as="geometry" />
         </mxCell>
         <mxCell id="m3" parent="ModelLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="ApiPublisherModel&#xa;(POST HTTP SQL Server)" vertex="1">
-          <mxGeometry height="60" width="200" x="50" y="260" as="geometry" />
+          <mxGeometry height="60" width="140" x="10" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="hUOhvdtTTBG6VjeqHNcI-1" parent="ModelLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="Save log" vertex="1">
+          <mxGeometry height="60" width="140" x="200" y="320" as="geometry" />
         </mxCell>
         <mxCell id="edge1" edge="1" parent="1" source="VMLayer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;dashed=1;fontColor=#FF6600;strokeColor=#FF6600;" target="ViewLayer" value="Data Binding&#xa;(Qt Signals/Slots)">
           <mxGeometry relative="1" as="geometry">
@@ -132,7 +138,22 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="DoCBtEsDrlyHim7sqgPX-2" connectable="0" parent="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="signal" vertex="1">
-          <mxGeometry x="750" y="130" as="geometry" />
+          <mxGeometry x="750" y="130" as="geometry">
+            <mxPoint x="-7" y="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hUOhvdtTTBG6VjeqHNcI-3" edge="1" parent="1" source="m3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" target="v1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="390" />
+              <mxPoint x="310" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hUOhvdtTTBG6VjeqHNcI-4" connectable="0" parent="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="signal" vertex="1">
+          <mxGeometry x="587" y="403" as="geometry">
+            <mxPoint x="-7" y="-3" as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

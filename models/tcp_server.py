@@ -26,7 +26,7 @@ class TcpServerModel(QObject):
         self.sock.bind((self._host, self.port))
         self.sock.listen()
         self.sock.settimeout(1.0)
-        print(f"[Server] Đang lắng nghe trên port {self.port}...")
+        print(f"[Server] Dang lang nghe tren port {self.port}...")
 
         self.is_running = True
         

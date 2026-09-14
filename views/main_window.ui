@@ -73,99 +73,45 @@ QPushButton:checked {
         </widget>
        </item>
        <item>
-        <widget class="QScrollArea" name="scrollArea_Sidebar">
+        <widget class="QTreeWidget" name="tree_menu">
          <property name="styleSheet">
-          <string>QScrollArea { border: none; background-color: transparent; } QWidget#scrollAreaWidgetContents_Sidebar { background-color: transparent; }</string>
+          <string>
+QTreeWidget {
+    background-color: transparent;
+    color: #b0c4de;
+    border: none;
+    font-size: 13px;
+    font-weight: bold;
+    outline: 0;
+}
+QTreeWidget::item {
+    height: 45px;
+    border-bottom: 1px solid #1c2b42;
+}
+QTreeWidget::item:hover {
+    background-color: #162842;
+    color: white;
+}
+QTreeWidget::item:selected {
+    background-color: #1a426e;
+    color: #00ffff;
+    border-left: 4px solid #00ffff;
+}
+QTreeWidget::branch:has-children:!has-siblings:closed,
+QTreeWidget::branch:closed:has-children:has-siblings {
+    border-image: none;
+    image: none;
+}
+          </string>
          </property>
-         <property name="widgetResizable">
+         <property name="headerHidden">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_Sidebar">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>187</width>
-            <height>410</height>
-           </rect>
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_SidebarButtons">
-           <property name="spacing">
-            <number>5</number>
-           </property>
-           <item>
-            <widget class="QPushButton" name="btn_LineMonitor">
-             <property name="styleSheet">
-              <string>border: 1px solid red; border-radius: 10px; text-align: center;</string>
-             </property>
-             <property name="text">
-              <string>Line Monitor</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_AlarmHistory">
-             <property name="text">
-              <string>Alarm History</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_Production">
-             <property name="text">
-              <string>Production</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_Quality">
-             <property name="text">
-              <string>Quality</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_EnergyMonitor">
-             <property name="text">
-              <string>Energy Monitor</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_Trend">
-             <property name="text">
-              <string>Trend</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_DataLog">
-             <property name="text">
-              <string>Data Log</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
+         </column>
         </widget>
        </item>
        <item>
@@ -481,23 +427,12 @@ QLabel {
        </widget>
       </item>
       <item>
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="styleSheet">
-         <string>QScrollArea { border: none; background-color: transparent; } QWidget#scrollAreaWidgetContents { background-color: transparent; }</string>
+       <widget class="QStackedWidget" name="stackedWidget">
+        <property name="currentIndex">
+         <number>0</number>
         </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>1040</width>
-           <height>574</height>
-          </rect>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_machines">
+        <widget class="QWidget" name="page_LineMonitor">
+         <layout class="QVBoxLayout" name="verticalLayout_LineMonitor">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -510,9 +445,204 @@ QLabel {
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <property name="spacing">
-           <number>10</number>
+          <item>
+           <widget class="QScrollArea" name="scrollArea">
+            <property name="styleSheet">
+             <string>QScrollArea { border: none; background-color: transparent; } QWidget#scrollAreaWidgetContents { background-color: transparent; }</string>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>1040</width>
+               <height>574</height>
+              </rect>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_machines">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="spacing">
+               <number>10</number>
+              </property>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_Equipment">
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_page_Equipment">
+            <property name="styleSheet">
+             <string>color: white; font-size: 20px;</string>
+            </property>
+            <property name="text">
+             <string>Equipment Page (Coming Soon)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_AlarmHistory">
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_page_AlarmHistory">
+            <property name="styleSheet">
+             <string>color: white; font-size: 20px;</string>
+            </property>
+            <property name="text">
+             <string>AlarmHistory Page (Coming Soon)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_Production">
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_page_Production">
+            <property name="styleSheet">
+             <string>color: white; font-size: 20px;</string>
+            </property>
+            <property name="text">
+             <string>Production Page (Coming Soon)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_Quality">
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_page_Quality">
+            <property name="styleSheet">
+             <string>color: white; font-size: 20px;</string>
+            </property>
+            <property name="text">
+             <string>Quality Page (Coming Soon)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_EnergyMonitor">
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_page_EnergyMonitor">
+            <property name="styleSheet">
+             <string>color: white; font-size: 20px;</string>
+            </property>
+            <property name="text">
+             <string>EnergyMonitor Page (Coming Soon)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_Trend">
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="lbl_page_Trend">
+            <property name="styleSheet">
+             <string>color: white; font-size: 20px;</string>
+            </property>
+            <property name="text">
+             <string>Trend Page (Coming Soon)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_DataLog">
+         <layout class="QVBoxLayout" name="verticalLayout_DataLog">
+          <item>
+           <widget class="QLabel" name="label_DataLog_Content">
+            <property name="styleSheet">
+             <string>color: white; font-size: 24px;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="lineWidth">
+             <number>9</number>
+            </property>
+            <property name="text">
+             <string>data received/sent</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_SQLServer">
+         <layout class="QVBoxLayout" name="vl_sqlserver">
+          <property name="leftMargin">
+           <number>8</number>
           </property>
+          <property name="topMargin">
+           <number>8</number>
+          </property>
+          <property name="rightMargin">
+           <number>8</number>
+          </property>
+          <property name="bottomMargin">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lbl_sql_title">
+            <property name="styleSheet">
+             <string>color: white; font-size: 12px; font-weight: bold;</string>
+            </property>
+            <property name="text">
+             <string>Data sent / Data receive</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="txt_sql_log">
+            <property name="styleSheet">
+             <string>background-color: #0d1b2a; color: #c8d8e8; font-family: Consolas; font-size: 11px; border: 1px solid #1c3b5a;</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </widget>
