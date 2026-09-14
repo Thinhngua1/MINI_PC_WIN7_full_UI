@@ -65,7 +65,8 @@ class MainWindow(QMainWindow):
                 row += 1
 
         # DỒN LAYOUT: Ép toàn bộ các thẻ dồn lên góc Trên - Bên Trái, không bị dãn khoảng cách
-        self.gridLayout_machines.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+        self.gridLayout_machines.setRowStretch(99, 1)
+        self.gridLayout_machines.setColumnStretch(99, 1)
         
 
     def setup_tree_menu(self):
