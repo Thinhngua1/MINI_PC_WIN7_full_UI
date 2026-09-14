@@ -5,6 +5,8 @@ import threading
 import time
 from datetime import datetime
 from typing import Optional, Dict
+from models.data_logger import DataLoggerModel
+from models.api_publisher import ApiPublisherModel
 
 class DataParserModel:
 
@@ -26,6 +28,9 @@ class DataParserModel:
 
         # Khóa an toàn khi có nhiều luồng (thread) cùng gọi hàm print
         self.lock = threading.Lock()
+
+        self.logger = DataLoggerModel() # tạo instance cho DataLoggerModel
+        self.publisher = ApiPublisherModel() #tạo instance cho ApiPublisherModel
 
 
     def parse_csv(self, raw_data) -> Optional[Dict[str, str]]:
@@ -53,10 +58,16 @@ class DataParserModel:
                     for index_str, field_name in mapping.items():
                         idx = int(index_str) # Chuyển "0", "1" thành số nguyên
                         if idx < len(parts):
+                        # if parts[idx]:
                             extracted_data[field_name] = parts[idx]
+                        elif idx >= len(parts): 
+                            extracted_data[field_name] = ""
 
                     print(f"extracted_data: {extracted_data}")
+                    # in log
                     
+                    self.logger.save_to_local_log(extracted_data)
+                    self.publisher._send_to_api(extracted_data)
 
                     return extracted_data # Gọi 1 lần duy nhất và trả về kết quả
                     {'machine': 'DRB_02', 'model': 'A175', 'total': '1000', 'qtyOk': '650',
@@ -67,25 +78,6 @@ class DataParserModel:
         except Exception as e:
             print(f"[DataParser] Lỗi phân tích dữ liệu: {e}")
             return None 
-
-    # def _save_to_json(self):
-    #     # tao file json(vd: log_2026-08-30.json)
-    #     today_str = datetime.now().strftime("%Y-%m-%d")
-
-    #     dir = os.path.dirname(os.path.abspath(__file__))
-    #     parent_dir = os.path.dirname(dir)
-    #     filename = os.path.join(parent_dir, f"log_{today_str}.json")
-
-    #     # Cấu trúc 1 dòng JSON ghi xuống file
-    #     log_data = {
-    #         "message": self.extracted_data
-    #     }
-
-    #     # GHi log: Dùng Lock để đảm bảo an toàn khi các luồng ngầm ghi file cùng lúc
-    #     with self.lock:
-    #         with open(filename, "a", encoding="utf-8") as f:
-    #             # Ghi dưới dạng JSON Lines (mỗi đối tượng JSON là 1 dòng)
-    #             f.write(json.dumps(log_data, ensure_ascii=False) + "\n")
 
     # def _send_to_api(self):
     #     url = "http://192.168.130.236:8010/Product"

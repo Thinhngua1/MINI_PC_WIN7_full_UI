@@ -1,0 +1,12 @@
+{"message": {"machine": "DRB_06", "model": "S741", "total": "7968", "qtyOk": "7968", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:26:04", "message": ""}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "2194", "qtyOk": "2194", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:28:45", "message": ""}}
+{"message": {"machine": "DRB_06", "model": "S741", "total": "8076", "qtyOk": "8076", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:33:44", "message": ""}}
+{"message": {"machine": "DRB_06", "model": "S741", "total": "8103", "qtyOk": "8103", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:36:51", "message": ""}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "2330", "qtyOk": "2330", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:38:45", "message": ""}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "2374", "qtyOk": "2374", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:43:48", "message": ""}}
+{"message": {"machine": "DRB_03", "model": "A175", "total": "1000", "qtyOk": "650", "qtyNg": "350", "rate": "65", "shifts": "1", "date": "2025-12-12", "time": "2025-12-12 09:09:10", "message": "wait_material"}}
+{"message": {"machine": "DRB_03", "model": "A175", "total": "1000", "qtyOk": "650", "qtyNg": "350", "rate": "65", "shifts": "1", "date": "2025-12-12", "time": "2025-12-12 09:09:10", "message": "wait_material"}}
+{"message": {"machine": "DRB_06", "model": "S741", "total": "8223", "qtyOk": "8223", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:47:02", "message": ""}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "2480", "qtyOk": "2480", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:48:50", "message": ""}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "2582", "qtyOk": "2582", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:53:50", "message": ""}}
+{"message": {"machine": "DRB_06", "model": "S741", "total": "8265", "qtyOk": "8265", "qtyNg": "0", "rate": "100.00", "shifts": "0", "date": "2026-09-14", "time": "2026-09-14 09:54:43", "message": ""}}
