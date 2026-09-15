@@ -9,6 +9,7 @@ from models.api_publisher import ApiPublisherModel
 
 # 2. Import các lớp ViewModels
 from viewmodels.dashboard_vm import DashboardViewModel
+from viewmodels.Production_vm import ProductionViewModel
 
 # 3. Import các lớp Views
 from views.main_window import MainWindow
@@ -26,21 +27,31 @@ def main():
 
     # --- KHỞI TẠO TẦNG VIEWMODEL ---
     dashboard_vm = DashboardViewModel(config['machines'])
-    
-    # --- KHỞI TẠO TẦNG MODEL ---
+    production_vm = ProductionViewModel()
+    # ===== TEST: Xóa 3 dòng này sau khi verify xong =====
+    fake_snapshot = {
+        machine_id: {"ok": 99, "ng": 1, "total": 100}
+        for machine_id in dashboard_vm.lines.keys()
+    }
+    production_vm.save_hourly_snapshot("11:00", fake_snapshot)
+    # =====================================================
+
+
+        # --- KHỞI TẠO TẦNG MODEL ---
     tcp_port = config.get('network', {}).get('tcp_listen_port', 8500)
     tcp_server = TcpServerModel(tcp_port)
 
     
     # --- KHỞI TẠO TẦNG VIEW ---
     main_window = MainWindow(dashboard_vm)
-    
-    # 1.1. Log từ Cổng mạng TCP (Nhận Data thô)
+
+       
+    # 1.1. Log từ Cổng mạng TCP (Nhận Data thô) về main
     tcp_server.signal_data_received.connect(
         lambda client, msg: main_window.append_sql_log(f"[TCP] Nhận từ {client}: {msg}")
     )
     
-    # 1.2. Log từ Cổng mạng TCP (Báo cắm/rút dây mạng)
+    # 1.2. Log từ Cổng mạng TCP (Báo cắm/rút dây mạng) về main
     tcp_server.signal_connection_changed.connect(
         lambda client, is_conn: main_window.append_sql_log(
             f"[TCP] Client {client} -> {'ĐÃ KẾT NỐI' if is_conn else 'NGẮT KẾT NỐI'}"
@@ -51,11 +62,19 @@ def main():
     tcp_server.signal_data_received.connect(dashboard_vm.handle_raw_data)
     tcp_server.signal_connection_changed.connect(dashboard_vm.handle_connection_changed)
 
-    # 2 từ  data_parser trả về
+    # 2 từ  data_parser trả về main
     dashboard_vm.parser.signal_log_of_dataParser.connect(main_window.append_sql_log)
-    # 3 từ SQL server trả về
+    # 3 từ SQL server trả về main
     dashboard_vm.parser.publisher.signal_log_updated.connect(main_window.append_sql_log) 
+    # từ Dashboard từ production 
+    dashboard_vm.signal_hourly_data.connect(production_vm.save_hourly_snapshot)
+    # từ Dashboard -> time, Shift
+    dashboard_vm.signal_time.connect(main_window.update_header_time)
 
+    # View (MainWindow) yêu cầu tải data -> ném cho ProductionVM 
+    main_window.signal_request_load_data.connect(production_vm.load_data_by_date)
+
+    production_vm.signal_table_data_ready.connect(main_window.update_production_table)
 
     main_window.show()
     
