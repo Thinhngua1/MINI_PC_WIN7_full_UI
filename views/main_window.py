@@ -1,10 +1,18 @@
 import os
-from PyQt5.QtWidgets import QMainWindow, QWidget, QTreeWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QWidget, QTreeWidgetItem, QTableWidgetItem, QButtonGroup, QAbstractItemView
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,QDate, pyqtSignal
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from PyQt5.QtWidgets import QVBoxLayout
 
 
 class MainWindow(QMainWindow):
+
+    # signal button "tải dữ liệu"
+    signal_request_load_data = pyqtSignal(str)
+
     def __init__(self, dashboard_vm):
         super().__init__()
         # Load file UI tổng
@@ -26,11 +34,27 @@ class MainWindow(QMainWindow):
         # 1.5. Cài đặt Cây Menu (Tree Menu)
         self.setup_tree_menu()
 
+        # 3. Khởi tạo giao diện Bảng
+        self.setup_production_table()
+        
+        # 4. 
+        # Bật chế độ "Công tắc" cho 2 nút
+        self.btn_chart_line.setCheckable(True)
+        self.btn_chart_bar.setCheckable(True)
+        # Nhét 2 nút vào chung 1 Group để tự động tắt bật chéo nhau
+        self.chart_btn_group = QButtonGroup(self)
+        self.chart_btn_group.addButton(self.btn_chart_line)
+        self.chart_btn_group.addButton(self.btn_chart_bar)
+        # Mặc định chọn nút ĐƯỜNG cho nó sáng lên
+        self.btn_chart_line.setChecked(True)
+
+        # 4. Khởi tạo giao diện Biểu đồ (CẬU THÊM DÒNG NÀY VÀO LÀ HẾT LỖI)
+        self.setup_chart_canvas() 
+
         # 2. Đấu nối các tín hiệu (Wiring Signals)
         self.wire_signals()
 
-
-
+        
     def setup_dynamic_machines(self):
         """Khởi tạo giao diện động dựa trên danh sách line trong ViewModel."""
         card_ui_path = os.path.join(os.path.dirname(__file__), 'line_card.ui')
@@ -76,6 +100,12 @@ class MainWindow(QMainWindow):
         item_line_monitor = QTreeWidgetItem(self.tree_menu, ["Line Monitor"])
         QTreeWidgetItem(item_line_monitor, ["Change Tray"])
         QTreeWidgetItem(item_line_monitor, ["Function"])
+        QTreeWidgetItem(item_line_monitor, ["AUTOTAPE"])
+        QTreeWidgetItem(item_line_monitor, ["MEDITECH"])
+        QTreeWidgetItem(item_line_monitor, ["PRESSTAPE"])
+        QTreeWidgetItem(item_line_monitor, ["CTC"])
+        QTreeWidgetItem(item_line_monitor, ["X-RAY"])
+
         
         QTreeWidgetItem(self.tree_menu, ["Equipment"])
         QTreeWidgetItem(self.tree_menu, ["Alarm History"])
@@ -99,6 +129,17 @@ class MainWindow(QMainWindow):
         # Đặt trang mặc định là Line Monitor
         self.stackedWidget.setCurrentIndex(0)
 
+        # event bấm nút "Tải dữ liệu"
+        self.btn_load_data.clicked.connect(self.on_btn_load_clicked)
+
+        # event vẽ biểu đồ
+            # 1. Khi User click vào 1 ô bất kỳ trên bảng -> Gọi hàm lôi data ra vẽ
+        self.tbl_production.itemClicked.connect(self.on_table_row_clicked)
+        
+            # 2. Khi User đổi chế độ ĐƯỜNG / CỘT -> Vẽ lại (dùng data đang lưu trong cache)
+        self.btn_chart_line.clicked.connect(lambda: self.draw_production_chart(self.current_machine, self.current_x, self.current_y))
+        self.btn_chart_bar.clicked.connect(lambda: self.draw_production_chart(self.current_machine, self.current_x, self.current_y))
+
     def handle_tree_menu_click(self, item, column=0):
         """Xử lý khi user bấm vào bất kỳ thẻ nào trên cây Menu"""
         menu_name = item.text(0)
@@ -107,10 +148,23 @@ class MainWindow(QMainWindow):
         if menu_name == "Line Monitor":
             item.setExpanded(not item.isExpanded())
             return
-            
+
+        Line_Monitors = {
+            "Change Tray": 0,
+            "Function": 0,
+            "AUTOTAPE":0,
+            "MEDITECH":0,
+            "PRESSTAPE":0,
+            "CTC":0,
+            "X-RAY":0}
         page_map = {
             "Change Tray": 0,
             "Function": 0,
+            "AUTOTAPE":0,
+            "MEDITECH":0,
+            "PRESSTAPE":0,
+            "CTC":0,
+            "X-RAY":0,
             "Equipment": 1,
             "Alarm History": 2,
             "Production": 3,
@@ -124,7 +178,7 @@ class MainWindow(QMainWindow):
         if menu_name in page_map:
             self.stackedWidget.setCurrentIndex(page_map[menu_name])
 
-            if menu_name in ["Change Tray", "Function"]:
+            if menu_name in Line_Monitors:
                 print(f"[UI] Đang xem Line Monitor chế độ: {menu_name}")
 
                 # Lưu lại Tab đang xem
@@ -167,7 +221,7 @@ class MainWindow(QMainWindow):
             else:
                 card_widget.setVisible(False)
 
-    def update_summary_ui(self, summary_data):
+    def update_summary_ui(self, summary_data):      
         """Cập nhật phần Summary chung ở trên cùng."""
         self.lbl_sum_total.setText(str(summary_data['total_machine']))
         self.lbl_sum_running.setText(str(summary_data['machine_running']))
@@ -178,5 +232,167 @@ class MainWindow(QMainWindow):
         overall_oee = 0.0
         # Cần logic tính OEE từ Model/ViewModel, tạm fix cứng OEE nếu chưa có data
         self.lbl_sum_oee.setText(f"{overall_oee:.1f}%")
+
+    def update_header_time(self, time_str, shift_str):
+        self.lbl_DateTime.setText(time_str)
+        self.lbl_Shift.setText(shift_str)
+
+    #vẽ bảng cho production Chỉ gọi 1 lần lúc khởi động"""
+    def setup_production_table(self): 
+        self.date_picker.setDate(QDate.currentDate())  # Set ngày hôm nay
+
+        self.tbl_production.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        # 1. Danh sách 24 giờ (theo đúng thứ tự trong ảnh: 08:00 -> 07:00)
+        hours = [f"{h:02d}:00" for h in range(8, 24)] + \
+                [f"{h:02d}:00" for h in range(0, 8)]
+        col_headers = ["LINE"] + hours + ["TOTAL"]
+
+        # 2. Danh sách tên máy lấy từ ViewModel (không hardcode)
+        machine_ids = list(self.dashboard_vm.lines.keys())
+
+        # 3. Set số cột và số hàng
+        self.tbl_production.setColumnCount(len(col_headers))
+        self.tbl_production.setRowCount(len(machine_ids))
+
+        # 4. Gán Header cột
+        self.tbl_production.setHorizontalHeaderLabels(col_headers)
+
+        # 5. Gán tên máy vào cột đầu tiên (cột LINE)
+        for row, machine_id in enumerate(machine_ids):
+            item = QTableWidgetItem(machine_id)
+            item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            
+            self.tbl_production.setItem(row, 0, item)
+
+        # 6. Điền số 0 vào tất cả các ô còn lại
+        for row in range(len(machine_ids)):
+            for col in range(1, len(col_headers)):
+                item = QTableWidgetItem("0")
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                
+                self.tbl_production.setItem(row, col, item)
+
+        # 7. Ép cột LINE cố định nhỏ, các cột giờ bằng nhau
+        self.tbl_production.setColumnWidth(0, 80)
+        for col in range(1, len(col_headers)):
+            self.tbl_production.setColumnWidth(col, 55)
+
+        # 8. Ẩn cột số thứ tự mặc định của Qt
+        self.tbl_production.verticalHeader().setVisible(False)
+
+
+
+    #============== khối vẽ biểu đồ ======================
+    def on_btn_load_clicked(self):
+        # Lấy ngày đang chọn và biến thành string chuẩn yyyy-MM-dd
+        date_str = self.date_picker.date().toString("yyyy-MM-dd")
+        self.signal_request_load_data.emit(date_str)
+
+    #chọn mode vẽ chart
+            
+        # Bật chế độ "Công tắc" cho 2 nút
+        self.btn_chart_line.setCheckable(True)
+        self.btn_chart_bar.setCheckable(True)
+
+        # Nhét 2 nút vào chung 1 Group để tự động tắt bật chéo nhau
+        self.chart_btn_group = QButtonGroup(self)
+        self.chart_btn_group.addButton(self.btn_chart_line)
+        self.chart_btn_group.addButton(self.btn_chart_bar)
+
+        # Mặc định chọn nút ĐƯỜNG cho nó sáng lên
+        self.btn_chart_line.setChecked(True)
+    
+    def update_production_table(self, is_success, msg, list_2D):
+        """Hứng data trả về từ ProductionVM"""
+        self.lbl_data_file_status.setText(msg)
+        
+        if is_success:
+            self.lbl_data_file_status.setStyleSheet("color: #00ff00;") # Màu xanh
+            # Lặp qua mảng 2 chiều
+            for row_idx, row_data in enumerate(list_2D):
+                # Cột 0 là tên Máy, ta bỏ qua vì đã cố định rồi. Chỉ ghi đè từ cột 1 trở đi
+                for col_idx in range(1, len(row_data)):
+                    val_str = str(row_data[col_idx])
+                    # Lấy ô giao diện ra và cập nhật giá trị
+                    self.tbl_production.item(row_idx, col_idx).setText(val_str)
+            
+        else:
+            self.lbl_data_file_status.setStyleSheet("color: #ff0000;") # Màu đỏ
+            # Clear bảng: Đưa tất cả số liệu về "0"
+            for row in range(self.tbl_production.rowCount()):
+                for col in range(1, self.tbl_production.columnCount()):
+                    self.tbl_production.item(row, col).setText("0")
+
+
+    def setup_chart_canvas(self):
+        """Biến frame_chart thành một bảng vẽ Matplotlib giao diện Dark Mode"""
+        # 1. Tạo Layout nhét vào trong frame_chart
+        self.chart_layout = QVBoxLayout(self.frame_chart)
+        self.chart_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # 2. Khởi tạo Figure (Bảng vẽ) với màu nền tiệp với Dark Theme
+        self.figure = Figure(facecolor='#0a141d')
+        self.canvas = FigureCanvas(self.figure)
+        self.chart_layout.addWidget(self.canvas)
+        
+        # 3. Khởi tạo Trục tọa độ (Axes)
+        self.ax = self.figure.add_subplot(111)
+        self.ax.set_facecolor('#0a141d')
+        self.ax.tick_params(colors='white') # Chữ số màu trắng
+        
+        # 4. Lưu lại 2 biến data tạm để dùng khi bấm nút chuyển ĐƯỜNG/CỘT
+        self.current_x = []
+        self.current_y = []
+        self.current_machine = ""
+
+    def draw_production_chart(self, machine_id, x_labels, y_values):
+        """Hàm thực thi vẽ biểu đồ"""
+        # Lưu vào cache để xài lại khi user bấm nút gạt Cột/Đường
+        self.current_x = x_labels
+        self.current_y = y_values
+        self.current_machine = machine_id
+        
+        self.ax.clear() # Xóa nét vẽ cũ
+        
+        # Kiểm tra xem nút nào đang được bấm
+        if self.btn_chart_line.isChecked():
+            # Chế độ ĐƯỜNG (Màu xanh lá)
+            self.ax.plot(x_labels, y_values, color='#00ff00', marker='o', linewidth=2)
+        else:
+            # Chế độ CỘT (Màu xanh dương)
+            self.ax.bar(x_labels, y_values, color='#3498db')
+            
+        # Tiêu đề và màu sắc
+        self.ax.set_title(f"SẢN LƯỢNG MÁY: {machine_id}", color='#f1c40f', fontweight='bold')
+        self.ax.set_ylabel("Total", color='white')
+        
+        # Xoay chữ trục X đi 45 độ cho khỏi đè lên nhau
+        for tick in self.ax.get_xticklabels():
+            tick.set_rotation(45)
+            
+        # Ép bảng vẽ update
+        self.figure.tight_layout()
+        self.canvas.draw()
+
+    def on_table_row_clicked(self, item):
+        row = item.row()
+        machine_id = self.tbl_production.item(row, 0).text()
+        
+        x_labels = []
+        y_values = []
+        
+        # Quét 24 cột giờ (từ cột 1 đến cột 24) trên cái bảng để nhặt số liệu ra
+        for col in range(1, 25): 
+            hour_str = self.tbl_production.horizontalHeaderItem(col).text()
+            val_str = self.tbl_production.item(row, col).text()
+            
+            x_labels.append(hour_str)
+            y_values.append(int(val_str) if val_str.isdigit() else 0)
+            
+        # Bốc đủ 24 số rồi thì gọi hàm Vẽ!
+        self.draw_production_chart(machine_id, x_labels, y_values)
+        
+
 if __name__ == "__main__":
      pass

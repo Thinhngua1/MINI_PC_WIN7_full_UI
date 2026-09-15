@@ -178,7 +178,7 @@ QTreeWidget::branch:closed:has-children:has-siblings {
            </font>
           </property>
           <property name="text">
-           <string>AUTO INLINE PRODUCTION MONITORING</string>
+           <string>ROBOT PRODUCTION MONITORING</string>
           </property>
          </widget>
         </item>
@@ -194,6 +194,27 @@ QTreeWidget::branch:closed:has-children:has-siblings {
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="lbl_DateTime">
+          <property name="text">
+           <string>lbl_DateTime</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lbl_Shift">
+          <property name="text">
+           <string>lbl_Shift</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lbl_Connection">
+          <property name="text">
+           <string>Connection: TCP</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -521,16 +542,283 @@ QLabel {
         <widget class="QWidget" name="page_Production">
          <layout class="QVBoxLayout">
           <item>
-           <widget class="QLabel" name="lbl_page_Production">
+           <widget class="QWidget" name="widget_2" native="true">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>100</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QLabel" name="lbl_production_header">
+               <property name="maximumSize">
+                <size>
+                 <width>200</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::Box</enum>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="text">
+                <string>PRODUCTION BY HOUR</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <item>
+                 <widget class="QDateEdit" name="date_picker">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/* Chỉnh màu cho ô hiển thị ngày */
+QDateEdit {
+    background-color: white;
+    color: black;
+}
+
+/* Chỉnh màu chữ cho phần lịch (Calendar) bên trong */
+QCalendarWidget QAbstractItemView:enabled {
+    color: black;
+    background-color: white;
+}
+QCalendarWidget QAbstractItemView:disabled {
+    color: gray;
+}
+
+/* Chỉnh màu thanh điều hướng (tháng/năm) ở trên cùng của lịch */
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background-color: #1c3b5a;
+    color: white;
+}</string>
+                  </property>
+                  <property name="dateTime">
+                   <datetime>
+                    <hour>0</hour>
+                    <minute>0</minute>
+                    <second>0</second>
+                    <year>2026</year>
+                    <month>1</month>
+                    <day>9</day>
+                   </datetime>
+                  </property>
+                  <property name="calendarPopup">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="btn_load_data">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background: #0000FF	
+</string>
+                  </property>
+                  <property name="text">
+                   <string>Tải dữ liệu</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lbl_data_file_status">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>1000</width>
+                    <height>400</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::Box</enum>
+                  </property>
+                  <property name="lineWidth">
+                   <number>0</number>
+                  </property>
+                  <property name="text">
+                   <string>lbl_data_file_status</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tbl_production">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>200</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string>color: white; font-size: 20px;</string>
+             <string notr="true">QTableWidget {
+    background-color: #0d1b2a;
+    color: #b0c4de;
+    gridline-color: #1c3b5a;
+    border: none;
+}
+QTableWidget::item {
+    background-color: #0d1b2a;
+    color: #b0c4de;
+}
+QTableWidget::item:selected {
+    background-color: #1a426e;
+    color: white;
+}
+QHeaderView::section {
+    background-color: #1c3b5a;
+    color: white;
+    border: 1px solid #0d1b2a;
+    padding: 4px;
+}</string>
             </property>
-            <property name="text">
-             <string>Production Page (Coming Soon)</string>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame_chart">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
+            <widget class="QWidget" name="widget_3" native="true">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>991</width>
+               <height>38</height>
+              </rect>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QLabel" name="lbl_product_in_hour">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>300</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Sản lượng theo giờ</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>58</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_chart_line">
+                <property name="styleSheet">
+                 <string notr="true">/* Khi nút KHÔNG được bấm (Trạng thái tối) */
+QPushButton {
+    background-color: #1c3b5a; /* Xanh đen */
+    color: #888888;          /* Chữ xám */
+    border: 1px solid #0d1b2a;
+}
+/* Khi nút ĐƯỢC CHỌN (Trạng thái sáng) */
+QPushButton:checked {
+    background-color: #3498db; /* Xanh dương sáng */
+    color: white;            /* Chữ trắng */
+    font-weight: bold;
+}</string>
+                </property>
+                <property name="text">
+                 <string>Đường</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_chart_bar">
+                <property name="styleSheet">
+                 <string notr="true">/* Khi nút KHÔNG được bấm (Trạng thái tối) */
+QPushButton {
+    background-color: #1c3b5a; /* Xanh đen */
+    color: #888888;          /* Chữ xám */
+    border: 1px solid #0d1b2a;
+}
+/* Khi nút ĐƯỢC CHỌN (Trạng thái sáng) */
+QPushButton:checked {
+    background-color: #3498db; /* Xanh dương sáng */
+    color: white;            /* Chữ trắng */
+    font-weight: bold;
+}</string>
+                </property>
+                <property name="text">
+                 <string>Cột</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>

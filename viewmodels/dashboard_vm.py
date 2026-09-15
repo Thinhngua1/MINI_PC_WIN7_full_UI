@@ -1,24 +1,36 @@
-
 from PyQt5.QtCore import QObject, pyqtSignal
 from viewmodels.line_vm import LineViewModel
+
+
+from PyQt5.QtCore import Qt,QTimer, QDateTime
 
 #import từ data parser(lớp model)
 from models.data_parser import DataParserModel
 
 class DashboardViewModel(QObject):
     signal_summary_updated = pyqtSignal(dict) # Phát tín hiệu (Tổng/OK/NG/wait_material,alarm, running, offline)
+    signal_hourly_data = pyqtSignal(str, dict)
+    signal_time = pyqtSignal(str, str)
 
     def __init__(self, machines_config): #machines_config đọc từ file config nhưng gọi từ hàm main(theo MVVM)
         super().__init__()
         self.parser = DataParserModel() # thuộc tính parser data
         # Khởi tạo động danh sách các LineViewModel dựa trên số lượng x máy
         self.lines = {} # có dạng: { 'DRB_02': QObject của LineViewModel}
-        #dict để check OFF line
+        # để check OFF line
         self.clients = {}  # dạng: {'192.168.x.x:8500' : 'DRB_02'}
+
+        # khởi tạo instance cho ProductionViewModel
+        
 
 
         for mac in machines_config:
             self.lines[mac['id']] = LineViewModel(mac['id'], mac['name']) # khởi tạo các máy
+
+        # Bật đồng hồ nghiệp vụ
+        self.clock_timer = QTimer(self)
+        self.clock_timer.timeout.connect(self.on_timer_tick)
+        self.clock_timer.start(1000)
 
     def handle_raw_data(self, client_id, raw_string):
         # 1. Gọi Parser dịch chuỗi -> Nhận về 1 cái Dict sạch sẽ
@@ -78,10 +90,7 @@ class DashboardViewModel(QObject):
                 if line.message == 'wait_material':
                     machine_WAITING_Material +=1
                 machine_running += 1
-            
-
-        
-
+                 
         # nhét vào dict
         summary_str = {
             "total_machine":total_machine,
@@ -93,6 +102,31 @@ class DashboardViewModel(QObject):
 
         self.signal_summary_updated.emit(summary_str)
 
+    def on_timer_tick(self):
+        now = QDateTime.currentDateTime()
+        time_str = now.toString("HH:mm:ss dd/MM/yyyy")
+        
+        # Tính ca làm việc
+        h, m, s = now.time().hour(), now.time().minute(), now.time().second()
+        shift_str = "1(08:00-20:00)" if 8 <= h < 20 else "2(20:00-08:00)"
+        
+        if m == 0 and s == 0:
+            hour_str = f"{h:02d}:00"
+            
+            # Tự động gom hết data của 24 máy lại thành 1 cục Dict
+            snapshot_data = {}
+            for machine_id, line_vm in self.lines.items():
+                snapshot_data[machine_id] = {
+                    "ok": line_vm.ok_count,
+                    "ng": line_vm.ng_count,
+                    "total": line_vm.total_count
+                }
+            
+            # Phát tín hiệu 
+            self.signal_hourly_data.emit(hour_str, snapshot_data)
+        self.signal_time.emit(time_str,shift_str)
+
+    
 
 # ===================== đã test ok ==========
 # nếu nỗi path, dùng python -m viewmodels.dashboard_vm.
