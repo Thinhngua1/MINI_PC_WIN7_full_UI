@@ -77,7 +77,7 @@ class DataParserModel(QObject):
 
                     return extracted_data # Gọi 1 lần duy nhất và trả về kết quả
                     {'machine': 'DRB_02', 'model': 'A175', 'total': '1000', 'qtyOk': '650',
-                      'qtyNg': '350', 'rate': '65', 'shifts': '1', 'date': '2025-12-12', 'time': '2025-12-12 09:09:10',"type": "Change Tray", 'message':'wait_material'}
+                      'qtyNg': '350', 'rate': '65', 'shifts': '1', 'date': '2025-12-12', 'time': '2025-12-12 09:09:10',"type": "Change Tray/Function", 'message':'wait_material'}
             print(f"Chuỗi không chứa từ khóa hợp lệ")    
             return None  # Chuỗi không chứa từ khóa hợp lệ
             
