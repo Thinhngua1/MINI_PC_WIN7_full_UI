@@ -1,0 +1,47 @@
+
+{
+    "network": {
+        "tcp_listen_port": 8500,
+        "heartbeat_port": 30003,
+        "offline_timeout_seconds": 5
+    },
+    "sql_server": {
+        "api_endpoint": "http://192.168.130.236:8010/Product"
+    },
+    "parser_rules": {
+        "DOBOT_LINE_1": {
+            "keyword": "DRB_",
+            "separator": ",",
+            "mapping": {
+                "0": "machine",
+                "1": "model",
+                "2": "total",
+                "3": "qtyOk",
+                "4": "qtyNg",
+                "5": "rate",
+                "6": "shifts",
+                "7": "date",
+                "8": "time",
+                "9": "type",
+                "10":"message"
+            }
+        }
+    },
+    "machines": [
+        {"id": "DRB_01", "name": ""},
+        {"id": "DRB_02", "name": ""},
+        {"id": "DRB_03", "name": ""},
+        {"id": "DRB_04", "name": ""},
+        {"id": "DRB_05", "name": ""},
+        {"id": "DRB_06", "name": ""},
+        {"id": "DRB_08", "name": ""},
+        {"id": "DRB_09", "name": ""},
+        {"id": "DRB_10", "name": ""},
+        {"id": "DRB_11", "name": ""},
+        {"id": "DRB_12", "name": ""},
+        {"id": "DRB_13", "name": ""},
+        {"id": "DRB_14", "name": ""},
+        {"id": "DRB_15", "name": ""},
+        {"id": "DRB_16", "name": ""}
+    ]
+}

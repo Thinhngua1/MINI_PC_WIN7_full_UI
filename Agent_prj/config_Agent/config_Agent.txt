@@ -61,7 +61,9 @@ running(ONL) thì ngược với OFFline( dựa trên việc bắt tín hiệu m
 Phần các tag động( tạo thủ công hoặc tự động tạo )
 robot rất nhiều (x máy) nên sẽ làm UI có thanh trượt khu vực đó
 
-data nhận đc từ parser data là dạng dict:{'machine': 'DRB_02', 'model': 'A175', 'total': '1000', 'qtyOk': '900', 'qtyNg': '100', 'rate': '90', 'shifts': '1', 'date': '2025-12-12', 'time': '2025-12-12 09:09:10','message':'wait_material/none'} cần thêm status: alarm/waiting_material, nhưng bên robot chưa làm đc.
+data nhận đc từ parser data là dạng dict:
+{'machine': 'DRB_02', 'model': 'A175', 'total': '1000', 'qtyOk': '650','qtyNg': '350', 'rate': '65', 'shifts': '1', 'date': '2025-12-12', 'time': '2025-12-12 09:09:10',"type": "Change Tray", 'message':'wait_material'}
+ cần thêm status: alarm/waiting_material, nhưng bên robot chưa làm đc.
 
 chỗ tag của các máy, thêm hiển thị status = "running"/ "OFFLINE" vào để có dạng: tên máy - tên model - status
 
@@ -73,7 +75,7 @@ Kiến trúc cuộn cho Grid: Chuyển từ lưới fix cứng sang QScrollArea.
 Định dạng Tiêu đề Card (Card Header): Hợp nhất thành 1 dòng duy nhất theo chuẩn: [Tên Máy] - [Tên Model] - [Status]. (Biến này sẽ do code Python tự động nối chuỗi và bắn lên UI).
 Vòng tròn OEE 0.0%: Sử dụng giải pháp "Mockup" tạm thời bằng 1 QLabel có kích thước vuông (70x70) với thuộc tính border-radius: 35px (bo tròn 100%) và viền dày để mô phỏng hình vành khăn.
 
-Menu Trái (Mở rộng): Giữ nguyên nhưng đưa vào QScrollArea. Gắn các nút cơ bản ( Line Monitor, Equipment, alarm, History, production,....) và sẵn sàng không gian cho các tính năng tương lai.
+Menu Trái (Mở rộng): Giữ nguyên nhưng đưa vào QScrollArea. Gắn các nút cơ bản ( Line Monitor, Equipment, alarm, History, production,Quality, energy Monitor, Trend, Data log) và sẵn sàng không gian cho các tính năng tương lai.
 
 
 
