@@ -78,6 +78,32 @@ class ProductionViewModel(QObject):
         
         self.save_to_disk()
 
+
+        print(f"Đã lưu Snapshot {hour_str}. Đang bắn sang UI để Refresh...")
+        
+        # ============ THÊM ĐOẠN NÀY ĐỂ UI TỰ REFRESH ============
+        table_rows = []
+        hours_order = [f"{h:02d}:00" for h in range(8, 24)] + [f"{h:02d}:00" for h in range(0, 8)]
+        
+        for machine_id, hourly_data in self.daily_data.items():
+            row_data = [machine_id]
+            sum_total_day = 0
+            dict_hour = hourly_data.get("Hourly", {})
+            
+            for hour in hours_order:
+                quantity = dict_hour.get(hour, {"total": 0})
+                quantity_of_hour = int(quantity.get("total", 0)) # Fix chắc cú lấy số 0 nếu khuyết
+                sum_total_day += quantity_of_hour
+                row_data.append(str(quantity_of_hour))
+                
+            row_data.append(str(sum_total_day))
+            table_rows.append(row_data)
+            
+        # Bắn mảng 2 chiều vừa tạo sang cho MainWindow vẽ lại
+        from datetime import datetime
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        self.signal_table_data_ready.emit(True, f"{today_str} | REALTIME UPDATE", table_rows)
+
     def save_to_disk(self):
         """Ghi xuống ổ cứng"""
         file_path = self.get_today_file_path()
@@ -102,7 +128,7 @@ class ProductionViewModel(QObject):
                 # Lặp qua các khung giờ để lôi con số ra (đã làm tròn/format nếu cần)
                 dict_hour = hourly_data["Hourly"]
                 for _,quantity in dict_hour.items():
-                    quantity_of_hour = quantity["total"]
+                    quantity_of_hour = int(quantity["total"])
                     sum_total_day += quantity_of_hour
 
                     row_data.append(quantity_of_hour)

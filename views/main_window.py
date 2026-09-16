@@ -315,9 +315,7 @@ class MainWindow(QMainWindow):
                 for col_idx in range(1, len(row_data)):
                     val_str = str(row_data[col_idx])
                     # Lấy ô giao diện ra và cập nhật giá trị
-                    self.tbl_production.item(row_idx, col_idx).setText(val_str)
-
-                   
+                    self.tbl_production.item(row_idx, col_idx).setText(val_str)               
             
         else:
             self.lbl_data_file_status.setStyleSheet("color: #ff0000;") # Màu đỏ
@@ -325,6 +323,23 @@ class MainWindow(QMainWindow):
             for row in range(self.tbl_production.rowCount()):
                 for col in range(1, self.tbl_production.columnCount()):
                     self.tbl_production.item(row, col).setText("0")
+                    # Tự động Refresh biểu đồ nếu đang có một máy được chọn
+      
+        if hasattr(self, 'current_machine') and self.current_machine:
+            # Quét tìm cái máy đang được chọn nằm ở hàng (row) số mấy
+            for row in range(self.tbl_production.rowCount()):
+                if self.tbl_production.item(row, 0).text() == self.current_machine:
+                    
+                    # Cào lại 24 cột số liệu mới nhất của hàng đó
+                    x_labels, y_values = [], []
+                    for col in range(1, 25):
+                        x_labels.append(self.tbl_production.horizontalHeaderItem(col).text())
+                        val_str = self.tbl_production.item(row, col).text()
+                        y_values.append(int(val_str) if val_str.isdigit() else 0)
+                    
+                    # Ép biểu đồ vẽ lại với data mới chớp nhoáng
+                    self.draw_production_chart(self.current_machine, x_labels, y_values)
+                    break
 
 
     def setup_chart_canvas(self):
@@ -368,10 +383,34 @@ class MainWindow(QMainWindow):
         # Tiêu đề và màu sắc
         self.ax.set_title(f"SẢN LƯỢNG MÁY: {machine_id}", color='#f1c40f', fontweight='bold')
         self.ax.set_ylabel("Total", color='white')
+
+        self.ax.clear()
         
-        # Xoay chữ trục X đi 45 độ cho khỏi đè lên nhau
-        for tick in self.ax.get_xticklabels():
-            tick.set_rotation(45)
+        if self.btn_chart_line.isChecked():
+            self.ax.plot(x_labels, y_values, color='#00ff00', marker='o', linewidth=2)
+        else:
+            self.ax.bar(x_labels, y_values, color='#3498db')
+            
+        # ============ THÊM ĐOẠN NÀY ĐỂ HIỂN THỊ SỐ ============
+        # 1. Nâng trần trục Y lên 15% để số trên đỉnh không bị lẹm vào mép trên của biểu đồ
+        max_y = max(y_values) if y_values else 0
+        self.ax.set_ylim(0, max_y * 1.15 if max_y > 0 else 10)
+        # 2. Lặp qua các số liệu và ghi chữ lên đỉnh
+        for i, val in enumerate(y_values):
+            # Mẹo UX: Chỉ in số nếu > 0. 
+            # (Nếu in cả số 0 thì nguyên dãy 24 giờ sẽ có 24 cái số 0 nằm lè tè dưới đất trông rất rác)
+            if val > 0:
+                self.ax.text(
+                    i, val,                 # Tọa độ (X, Y) để đặt chữ
+                    str(val),               # Nội dung chữ (ép kiểu chuỗi)
+                    color='yellow',         # Chữ màu vàng cho nổi bật trên nền tối
+                    ha='center',            # Căn giữa theo chiều ngang (đứng ngay giữa cột)
+                    va='bottom',            # Nằm đè lên trên mép cột
+                    fontweight='bold'       # In đậm
+                )
+        # ======================================================
+        self.ax.set_title(f"SẢN LƯỢNG MÁY: {machine_id}", color='#f1c40f', fontweight='bold')
+        # xoay chữu 45 độ
             
         # Ép bảng vẽ update
         self.figure.tight_layout()

@@ -30,6 +30,8 @@ class DashboardViewModel(QObject):
         self.clock_timer.timeout.connect(self.on_timer_tick)
         self.clock_timer.start(1000)
 
+        self.last_minute = -1
+
     def handle_raw_data(self, client_id, raw_string):
         # 1. Gọi Parser dịch chuỗi -> Nhận về 1 cái Dict sạch sẽ
         clean_dict = self.parser.parse_csv(raw_string)
@@ -107,8 +109,11 @@ class DashboardViewModel(QObject):
         # Tính ca làm việc
         h, m, s = now.time().hour(), now.time().minute(), now.time().second()
         shift_str = "1(08:00-20:00)" if 8 <= h < 20 else "2(20:00-08:00)"
-        
-        if m == 0 and s == 0:
+
+        # 1 phút bắn 1 lần
+        if m != self.last_minute:
+            self.last_minute = m
+
             hour_str = f"{h:02d}:00"
             
             # Tự động gom hết data của 24 máy lại thành 1 cục Dict
