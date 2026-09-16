@@ -28,14 +28,6 @@ def main():
     # --- KHỞI TẠO TẦNG VIEWMODEL ---
     dashboard_vm = DashboardViewModel(config['machines'])
     production_vm = ProductionViewModel()
-    # ===== TEST: Xóa 3 dòng này sau khi verify xong =====
-    fake_snapshot = {
-        machine_id: {"ok": 99, "ng": 1, "total": 100}
-        for machine_id in dashboard_vm.lines.keys()
-    }
-    production_vm.save_hourly_snapshot("11:00", fake_snapshot)
-    # =====================================================
-
 
         # --- KHỞI TẠO TẦNG MODEL ---
     tcp_port = config.get('network', {}).get('tcp_listen_port', 8500)

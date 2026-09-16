@@ -13,3 +13,4 @@
 {"message": {"machine": "DRB_04", "model": "A175", "total": "1000", "qtyOk": "900", "qtyNg": "100", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "wait_material", "date": "2026-09-16", "time": "2026-09-16 17:28:29"}}
 {"message": {"machine": "DRB_04", "model": "A175", "total": "1000", "qtyOk": "900", "qtyNg": "100", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "wait_material", "date": "2026-09-16", "time": "2026-09-16 17:30:59"}}
 {"message": {"machine": "DRB_04", "model": "A175", "total": "1000", "qtyOk": "900", "qtyNg": "100", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "wait_material", "date": "2026-09-16", "time": "2026-09-16 17:36:41"}}
+{"message": {"machine": "DRB_04", "model": "A175", "total": "1000", "qtyOk": "900", "qtyNg": "100", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "wait_material", "date": "2026-09-16", "time": "2026-09-16 18:58:33"}}

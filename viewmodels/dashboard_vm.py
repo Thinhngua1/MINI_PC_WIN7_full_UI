@@ -22,8 +22,6 @@ class DashboardViewModel(QObject):
 
         # khởi tạo instance cho ProductionViewModel
         
-
-
         for mac in machines_config:
             self.lines[mac['id']] = LineViewModel(mac['id'], mac['name']) # khởi tạo các máy
 

@@ -316,6 +316,8 @@ class MainWindow(QMainWindow):
                     val_str = str(row_data[col_idx])
                     # Lấy ô giao diện ra và cập nhật giá trị
                     self.tbl_production.item(row_idx, col_idx).setText(val_str)
+
+                   
             
         else:
             self.lbl_data_file_status.setStyleSheet("color: #ff0000;") # Màu đỏ

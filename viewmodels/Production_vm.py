@@ -1,6 +1,7 @@
 import os
 import json
 import copy
+import sys
 from datetime import datetime
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -44,11 +45,16 @@ class ProductionViewModel(QObject):
 
         self.daily_data = {} # Nơi chứa Data thực tế của tất cả các máy
         
-        # XỬ LÝ ĐƯỜNG DẪN CHUẨN: Lùi 1 cấp để ra thư mục gốc, rồi trỏ vào thư mục LOG
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        parent_dir = os.path.dirname(current_dir)
+        # --- KIỂM TRA MÔI TRƯỜNG CHẠY ĐỂ TÌM ĐƯỜNG DẪN GỐC ---
+        if getattr(sys, 'frozen', False):
+            # Đang chạy dưới dạng file .exe đã đóng gói
+            # Trỏ thẳng ra thư mục đang chứa file main.exe
+            parent_dir = os.path.dirname(sys.executable)
+        else:
+            # Đang chạy bằng code python thô (khi dev)
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            parent_dir = os.path.dirname(current_dir)
         self.log_dir = os.path.join(parent_dir, "LOG")
-        
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir)
 

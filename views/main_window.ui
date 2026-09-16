@@ -450,7 +450,7 @@ QLabel {
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="page_LineMonitor">
          <layout class="QVBoxLayout" name="verticalLayout_LineMonitor">
@@ -726,6 +726,104 @@ QHeaderView::section {
            </widget>
           </item>
           <item>
+           <widget class="QWidget" name="widget_3" native="true">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="lbl_product_in_hour">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>300</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Sản lượng theo giờ</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>58</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_chart_line">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/* Khi nút KHÔNG được bấm (Trạng thái tối) */
+QPushButton {
+    background-color: #1c3b5a; /* Xanh đen */
+    color: #888888;          /* Chữ xám */
+    border: 1px solid #0d1b2a;
+}
+/* Khi nút ĐƯỢC CHỌN (Trạng thái sáng) */
+QPushButton:checked {
+    background-color: #3498db; /* Xanh dương sáng */
+    color: white;            /* Chữ trắng */
+    font-weight: bold;
+}</string>
+               </property>
+               <property name="text">
+                <string>Đường</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_chart_bar">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/* Khi nút KHÔNG được bấm (Trạng thái tối) */
+QPushButton {
+    background-color: #1c3b5a; /* Xanh đen */
+    color: #888888;          /* Chữ xám */
+    border: 1px solid #0d1b2a;
+}
+/* Khi nút ĐƯỢC CHỌN (Trạng thái sáng) */
+QPushButton:checked {
+    background-color: #3498db; /* Xanh dương sáng */
+    color: white;            /* Chữ trắng */
+    font-weight: bold;
+}</string>
+               </property>
+               <property name="text">
+                <string>Cột</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
            <widget class="QFrame" name="frame_chart">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -733,92 +831,6 @@ QHeaderView::section {
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <widget class="QWidget" name="widget_3" native="true">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>10</y>
-               <width>991</width>
-               <height>38</height>
-              </rect>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <widget class="QLabel" name="lbl_product_in_hour">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>300</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Sản lượng theo giờ</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>58</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QPushButton" name="btn_chart_line">
-                <property name="styleSheet">
-                 <string notr="true">/* Khi nút KHÔNG được bấm (Trạng thái tối) */
-QPushButton {
-    background-color: #1c3b5a; /* Xanh đen */
-    color: #888888;          /* Chữ xám */
-    border: 1px solid #0d1b2a;
-}
-/* Khi nút ĐƯỢC CHỌN (Trạng thái sáng) */
-QPushButton:checked {
-    background-color: #3498db; /* Xanh dương sáng */
-    color: white;            /* Chữ trắng */
-    font-weight: bold;
-}</string>
-                </property>
-                <property name="text">
-                 <string>Đường</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="btn_chart_bar">
-                <property name="styleSheet">
-                 <string notr="true">/* Khi nút KHÔNG được bấm (Trạng thái tối) */
-QPushButton {
-    background-color: #1c3b5a; /* Xanh đen */
-    color: #888888;          /* Chữ xám */
-    border: 1px solid #0d1b2a;
-}
-/* Khi nút ĐƯỢC CHỌN (Trạng thái sáng) */
-QPushButton:checked {
-    background-color: #3498db; /* Xanh dương sáng */
-    color: white;            /* Chữ trắng */
-    font-weight: bold;
-}</string>
-                </property>
-                <property name="text">
-                 <string>Cột</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
            </widget>
           </item>
          </layout>
