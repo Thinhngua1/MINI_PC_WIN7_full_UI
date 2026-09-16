@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Antigravity">
   <diagram id="mvvm-architecture" name="MVVM Industrial Architecture">
-    <mxGraphModel dx="1030" dy="559" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+    <mxGraphModel dx="1471" dy="799" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -44,10 +44,10 @@
         <mxCell id="m6la5iq5-5B1imkkkWdA-1" edge="1" parent="VMLayer" source="vm1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="vm2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="vm1" parent="VMLayer" style="rounded=1;whiteSpace=wrap;" value="DashboardViewModel&#xa;(Tổng/OK/NG/wait_material,alarm, running, offline)" vertex="1">
+        <mxCell id="vm1" parent="VMLayer" style="rounded=1;whiteSpace=wrap;" value="DashboardViewModel&#xa;(Tổng/OK/NG/wait_material, running, offline)" vertex="1">
           <mxGeometry height="60" width="200" x="50" y="130" as="geometry" />
         </mxCell>
-        <mxCell id="vm2" parent="VMLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="LineViewModel (x máy)&lt;br&gt;(Tên máy, tên model,total OK/NG,rate, status)" vertex="1">
+        <mxCell id="vm2" parent="VMLayer" style="rounded=1;whiteSpace=wrap;html=1;" value="LineViewModel (x máy)&lt;br&gt;(Tên máy, tên model,total OK/NG,rate, ,type, status)" vertex="1">
           <mxGeometry height="60" width="200" x="50" y="250" as="geometry" />
         </mxCell>
         <mxCell id="ModelLayer" parent="1" style="swimlane;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;startSize=40;" value="MODEL LAYER (Data &amp; Core Logic)&#xa;Xử lý dữ liệu thô, Mạng, IO" vertex="1">

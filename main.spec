@@ -3,9 +3,9 @@
 
 a = Analysis(
     ['main.py'],
-    pathex=['.'],
+    pathex=[],
     binaries=[],
-    datas=[('config', 'config'), ('views/*.ui', 'views')],
+    datas=[('config', 'config'), ('views', 'views')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

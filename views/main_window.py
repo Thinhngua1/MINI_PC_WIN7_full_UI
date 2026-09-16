@@ -97,7 +97,7 @@ class MainWindow(QMainWindow):
         """Tạo cấu trúc nhánh cây (Style CSS đã được chuyển sang Qt Designer)"""
         
         # Xây dựng các nhánh cây bằng code (nhàn hơn kéo thả UI nhiều)
-        item_line_monitor = QTreeWidgetItem(self.tree_menu, ["Line Monitor"])
+        item_line_monitor = QTreeWidgetItem(self.tree_menu, ["Overview"])
         QTreeWidgetItem(item_line_monitor, ["Change Tray"])
         QTreeWidgetItem(item_line_monitor, ["Function"])
         QTreeWidgetItem(item_line_monitor, ["AUTOTAPE"])
@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
             item.setExpanded(not item.isExpanded())
             return
 
-        Line_Monitors = {
+        Overview = {
             "Change Tray": 0,
             "Function": 0,
             "AUTOTAPE":0,
@@ -178,7 +178,7 @@ class MainWindow(QMainWindow):
         if menu_name in page_map:
             self.stackedWidget.setCurrentIndex(page_map[menu_name])
 
-            if menu_name in Line_Monitors:
+            if menu_name in Overview:
                 print(f"[UI] Đang xem Line Monitor chế độ: {menu_name}")
 
                 # Lưu lại Tab đang xem
@@ -187,7 +187,7 @@ class MainWindow(QMainWindow):
                 for machine_id, card_widget in self.machine_cards.items():
                     # Lấy dữ liệu type hiện tại của máy đó từ ViewModel
 
-                    current_type = str(getattr(self.dashboard_vm.lines[machine_id], 'type', '') or "").strip()
+                    current_type = str(getattr(self.dashboard_vm.lines[machine_id], 'type', 'Change Tray') or "Change Tray").strip()
                     
                     # Hiện thẻ nếu type khớp với Menu đang bấm, ngược lại thì Ẩn đi
                     if current_type == menu_name:

@@ -20,10 +20,10 @@
                 "4": "qtyNg",
                 "5": "rate",
                 "6": "shifts",
-                "7": "date",
-                "8": "time",
-                "9": "type",
-                "10":"message"
+                "7": "type",
+                "8":"message",
+                "9": "date",
+                "10": "time"
             }
         }
     },
