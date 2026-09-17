@@ -84,18 +84,39 @@ class ProductionViewModel(QObject):
         # ============ THÊM ĐOẠN NÀY ĐỂ UI TỰ REFRESH ============
         table_rows = []
         hours_order = [f"{h:02d}:00" for h in range(8, 24)] + [f"{h:02d}:00" for h in range(0, 8)]
-        
+
+        # tạo list 2D cho bảng UI
         for machine_id, hourly_data in self.daily_data.items():
             row_data = [machine_id]
             sum_total_day = 0
             dict_hour = hourly_data.get("Hourly", {})
             
+            prev_accumulated = 0  # Biến nhớ số tích lũy của giờ trước đó
+            
             for hour in hours_order:
-                quantity = dict_hour.get(hour, {"total": 0})
-                quantity_of_hour = int(quantity.get("total", 0)) # Fix chắc cú lấy số 0 nếu khuyết
-                sum_total_day += quantity_of_hour
-                row_data.append(str(quantity_of_hour))
+                # 1. Kiểm tra xem đã có dữ liệu của giờ này chưa (tránh giờ tương lai)
+                if hour in dict_hour:
+                    current_accumulated = int(dict_hour[hour].get("total", 0))
+                    
+                    # 2. Xử lý phép trừ
+                    if current_accumulated >= prev_accumulated:
+                        actual_hourly = current_accumulated - prev_accumulated
+                    else:
+                        # TRƯỜNG HỢP NGOẠI LỆ: Robot bị reset ca hoặc khởi động lại (số bị tụt)
+                        # Lúc này sản lượng giờ chính là số mới luôn, không trừ nữa
+                        actual_hourly = current_accumulated
+                        
+                    # Lưu mốc hiện tại thành "quá khứ" để dành cho vòng lặp giờ tiếp theo
+                    prev_accumulated = current_accumulated
+                else:
+                    # Chưa tới giờ này, hiển thị 0
+                    actual_hourly = 0
+                    
+                # 3. Cộng dồn vào cột TOTAL cuối cùng và nhét vào mảng
+                sum_total_day += actual_hourly
+                row_data.append(str(actual_hourly))
                 
+            # Cột cuối cùng là tổng thực tế trong ca
             row_data.append(str(sum_total_day))
             table_rows.append(row_data)
             
