@@ -37,7 +37,7 @@ class DataParserModel(QObject):
 
     def parse_csv(self, raw_data) -> Optional[Dict[str, str]]:
         try: 
-            # Ví dụ raw_data = "DRB_02,A175,1000,900,100,90,1,2025-12-12,2025-12-12 09:09:10"
+            # Ví dụ raw_data = "DRB_02,A175,1000,900,100,90,1,Change tray,"
             # 1. Quét qua các cấu hình máy để tìm xem chuỗi này của máy nào
             for _, val in self.config["parser_rules"].items():
                 keyword = val.get("keyword")

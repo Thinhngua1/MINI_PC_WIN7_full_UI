@@ -47,7 +47,7 @@ class DashboardViewModel(QObject):
             self.clients[client_id] = set() # tạo 1 set rỗng
         self.clients[client_id].add(machine_id) # thêm tên máy nếu ko trùng lặp(IP, tên máy )
 
-        # 2. Vứt data cho đúng ông Trưởng Line
+        # 2. Vứt data cho đúng ông Trưởng Line(card UI client riêng)
         if machine_id in self.lines:
             # Gọi hàm update_data của LineViewModel và ném cái dict cho nó
             self.lines[machine_id].update_data(clean_dict)
@@ -116,7 +116,7 @@ class DashboardViewModel(QObject):
 
             hour_str = f"{h:02d}:00"
             
-            # Tự động gom hết data của 24 máy lại thành 1 cục Dict
+            # Tự động gom hết data của 24 máy lại thành 1 Dict
             snapshot_data = {}
             for machine_id, line_vm in self.lines.items():
                 snapshot_data[machine_id] = {
