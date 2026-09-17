@@ -43,7 +43,7 @@ class ProductionViewModel(QObject):
             }
         }
 
-        self.daily_data = {} # Nơi chứa Data thực tế của tất cả các máy
+        
         
         # --- KIỂM TRA MÔI TRƯỜNG CHẠY ĐỂ TÌM ĐƯỜNG DẪN GỐC ---
         if getattr(sys, 'frozen', False):
@@ -58,6 +58,22 @@ class ProductionViewModel(QObject):
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir)
 
+        # ====== Tránh lưu đề file data khi restart app ======
+        today_file = self.get_today_file_path()
+        if os.path.exists(today_file):
+            try:
+                import json # (Nếu ở đầu file chưa import json thì thêm vào nhé)
+                with open(today_file, 'r', encoding='utf-8') as f:
+                    self.daily_data = json.load(f) # Nơi chứa Data thực tế của tất cả các máy
+                print("Đã khôi phục dữ liệu Production từ ổ cứng!")
+            except Exception as e:
+                print(f"Lỗi đọc file lúc khởi động: {e}")
+                self.daily_data = {} 
+
+        else: 
+            self.daily_data = {} 
+        # ====================================================
+
     def get_today_file_path(self):
         """Tự động tạo tên file theo ngày hôm nay (VD: production_2026-09-15.json)"""
         today_str = datetime.now().strftime("%Y-%m-%d")
@@ -71,7 +87,20 @@ class ProductionViewModel(QObject):
             if machine_id not in self.daily_data:
                 # Dùng copy.deepcopy để nhân bản cái frame gốc ra cho từng máy mới
                 self.daily_data[machine_id] = copy.deepcopy(self.frame)
+
+            # ========== THÊM BỘ LỌC CHỐNG GHI ĐÈ SỐ 0 ===========
+            new_total = int(counters.get("total", 0))
             
+            # Lấy số liệu cũ đang có trong RAM (vừa đọc từ ổ cứng lên)
+            old_data = self.daily_data[machine_id]["Hourly"].get(hour_str, {})
+            old_total = int(old_data.get("total", 0))
+            
+            # Nếu thẻ máy chưa nhận được data từ Robot (new_total = 0)
+            # mà trong RAM đang có số thật (old_total > 0), thì BỎ QUA không ghi đè!
+            if new_total == 0 and old_total > 0:
+                continue 
+            # =====================================================
+
             # Cập nhật số liệu vào đúng khung giờ (hour_str phải khớp VD "08:00")
             if hour_str in self.daily_data[machine_id]["Hourly"]:
                 self.daily_data[machine_id]["Hourly"][hour_str] = counters
@@ -85,7 +114,7 @@ class ProductionViewModel(QObject):
         table_rows = []
         hours_order = [f"{h:02d}:00" for h in range(8, 24)] + [f"{h:02d}:00" for h in range(0, 8)]
 
-        # tạo list 2D cho bảng UI
+        # tạo list 2D cho bảng ŨI
         for machine_id, hourly_data in self.daily_data.items():
             row_data = [machine_id]
             sum_total_day = 0

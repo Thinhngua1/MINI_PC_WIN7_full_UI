@@ -187,13 +187,17 @@ class MainWindow(QMainWindow):
                 for machine_id, card_widget in self.machine_cards.items():
                     # Lấy dữ liệu type hiện tại của máy đó từ ViewModel
 
-                    current_type = str(getattr(self.dashboard_vm.lines[machine_id], 'type', 'Change Tray') or "Change Tray").strip()
+                    current_type = str(getattr(self.dashboard_vm.lines[machine_id], 'type', '') or "").strip()
+                    current_filter = getattr(self, 'current_line_filter', None)
                     
-                    # Hiện thẻ nếu type khớp với Menu đang bấm, ngược lại thì Ẩn đi
-                    if current_type == menu_name:
-                        card_widget.setVisible(True)
-                    else:
-                        card_widget.setVisible(False)
+                    line_monitor_modes = ["Change Tray", "Function", "AUTOTAPE", "MEDITECH", "PRESSTAPE", "CTC", "X-RAY"]
+                    
+                    # đứng ở bất kỳ Tab nào thuộc Line Monitor, phải check ẩn/hiện liên tục
+                    if current_filter in line_monitor_modes:
+                        if current_type == current_filter:
+                            card_widget.setVisible(True)
+                        else:
+                            card_widget.setVisible(False)
 
     def append_sql_log(self, message: str):
         """Nhận log từ các Model (TCP, Parser, API) và hiển thị lên txt_sql_log."""

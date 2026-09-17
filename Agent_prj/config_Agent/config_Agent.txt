@@ -21,6 +21,7 @@ Ví dụ: "Đây là class TcpService để xử lý mạng, đây là MainViewM
 bạn đừng viết toàn bộ app cùng lúc, code sẽ rất dài và tôi  không thể kiểm soát được.
 Hãy đi từng tính năng. Ví dụ: "Hôm nay chúng ta làm module TCP Server trước. Viết code cho tôi phần này".
 bạn viết hoặc tôi sẽ viết code theo gợi ý của bạn. Nhiệm vụ của tôi là đọc hiểu/code, chạy thử, copy vào máy tôi. Dòng nào, hàm nào không hiểu -> Hỏi ngay.
+nếu bạn viết code gợi ý, hãy giữ nguyên các chú thích hoặc ít can thiệp nhất vào chú thích hiện tại của phần code mà bạn đang sửa
 4. Tự tay hoàn thiện (tôi làm)
 
 Khi đã có bộ khung chuẩn và một vài module mẫu, tôi sẽ bắt đầu quen tay.
@@ -62,7 +63,7 @@ Phần các tag động( tạo thủ công hoặc tự động tạo )
 robot rất nhiều (x máy) nên sẽ làm UI có thanh trượt khu vực đó
 
 data nhận đc từ parser data là dạng dict:
-{'machine': 'DRB_02', 'model': 'A175', 'total': '1000', 'qtyOk': '650','qtyNg': '350', 'rate': '65', 'shifts': '1', 'date': '2025-12-12', 'time': '2025-12-12 09:09:10',"type": "Change Tray", 'message':'wait_material'}
+{'machine': 'DRB_02', 'model': 'A175', 'total': '1000', 'qtyOk': '650','qtyNg': '350', 'rate': '65', 'shifts': '1', "type": "Change Tray", 'message':'wait_material','date': '2025-12-12', 'time': '2025-12-12 09:09:10',}
  cần thêm status: alarm/waiting_material, nhưng bên robot chưa làm đc.
 
 chỗ tag của các máy, thêm hiển thị status = "running"/ "OFFLINE" vào để có dạng: tên máy - tên model - status
@@ -75,9 +76,9 @@ Kiến trúc cuộn cho Grid: Chuyển từ lưới fix cứng sang QScrollArea.
 Định dạng Tiêu đề Card (Card Header): Hợp nhất thành 1 dòng duy nhất theo chuẩn: [Tên Máy] - [Tên Model] - [Status]. (Biến này sẽ do code Python tự động nối chuỗi và bắn lên UI).
 Vòng tròn OEE 0.0%: Sử dụng giải pháp "Mockup" tạm thời bằng 1 QLabel có kích thước vuông (70x70) với thuộc tính border-radius: 35px (bo tròn 100%) và viền dày để mô phỏng hình vành khăn.
 
-Menu Trái (Mở rộng): Giữ nguyên nhưng đưa vào QScrollArea. Gắn các nút cơ bản ( Line Monitor, Equipment, alarm, History, production,Quality, energy Monitor, Trend, Data log) và sẵn sàng không gian cho các tính năng tương lai.
+Menu Trái (Mở rộng): Giữ nguyên nhưng đưa vào QScrollArea. Gắn các nút cơ bản ( Overview, Equipment, alarm, History, production,Quality, energy Monitor, Trend, Data log) và sẵn sàng không gian cho các tính năng tương lai.
 
-
+16_9: sếp bổ sung thêm idle time(thời gian dừng máy mà ko lỗi,), loss time, error time
 
 Plan
 Hiện tại xây dựng hệ thống theo luồng trong file "kiến trúc mạng". Trong đó, tôi dùng TCP server là chủ yếu, nên file và code TCP client sẽ đc loại khỏi hệ thống(sau này cần sẽ tích hợp sau)
