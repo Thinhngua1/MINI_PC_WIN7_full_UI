@@ -1,0 +1,79 @@
+<mxfile host="Electron" modified="2026-09-17" agent="Antigravity" version="21" type="device">
+  <diagram id="diag_arch" name="Architecture v2">
+    <mxGraphModel dx="1434" dy="844" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- VIEW LAYER -->
+        <mxCell id="view-group" value="VIEW Layer (UI Components)" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="1520" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="v1" value="MainWindow_UI&#xa;(Main Shell)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="view-group"><mxGeometry x="40" y="40" width="220" height="100" as="geometry"/></mxCell>
+        <mxCell id="v2" value="QTreeWidget&#xa;(Sidebar Menu)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="view-group"><mxGeometry x="300" y="40" width="200" height="100" as="geometry"/></mxCell>
+        <mxCell id="v3" value="Header&#xa;(Time, Shift, Status)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="view-group"><mxGeometry x="540" y="40" width="200" height="100" as="geometry"/></mxCell>
+        <mxCell id="v4" value="Line Cards&#xa;(Grid of Widgets)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="view-group"><mxGeometry x="780" y="40" width="200" height="100" as="geometry"/></mxCell>
+        <mxCell id="v5" value="Production Page (MỚI)&#xa;- QTableWidget (24h)&#xa;- Matplotlib Chart&#xa;- ĐƯỜNG/CỘT Toggle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="view-group"><mxGeometry x="1020" y="40" width="240" height="100" as="geometry"/></mxCell>
+
+        <!-- VIEWMODEL LAYER -->
+        <mxCell id="vm-group" value="VIEWMODEL Layer (Presentation Logic)" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="360" width="1520" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm1" value="DashboardViewModel&#xa;(Orchestrator)&#xa;&#xa;- 1-Min Clock Timer&#xa;- signal_hourly_data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="vm-group"><mxGeometry x="40" y="40" width="240" height="120" as="geometry"/></mxCell>
+        <mxCell id="vm2" value="LineViewModel&#xa;&#xa;- tick_1_second()&#xa;- Status/Count/Rate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="vm-group"><mxGeometry x="340" y="40" width="200" height="120" as="geometry"/></mxCell>
+        <mxCell id="vm3" value="SummaryViewModel&#xa;(Aggregated Data)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="vm-group"><mxGeometry x="600" y="40" width="200" height="120" as="geometry"/></mxCell>
+        <mxCell id="vm4" value="ProductionViewModel (MỚI)&#xa;&#xa;- save_hourly_snapshot()&#xa;- Phép trừ Delta (Giờ sau - trước)&#xa;- signal_table_data_ready" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="vm-group"><mxGeometry x="1020" y="40" width="240" height="120" as="geometry"/></mxCell>
+
+        <!-- MODEL LAYER -->
+        <mxCell id="model-group" value="MODEL Layer (Data + Services)" style="swimlane;startSize=30;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="1520" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="m1" value="TcpServerService&#xa;- signal_data_received" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="model-group"><mxGeometry x="40" y="40" width="240" height="140" as="geometry"/></mxCell>
+        <mxCell id="m2" value="DataProcessorService&#xa;- Parse CSV&#xa;- Save JSON logs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="model-group"><mxGeometry x="340" y="40" width="240" height="140" as="geometry"/></mxCell>
+        <mxCell id="m3" value="ConfigManager&#xa;(Singleton)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="model-group"><mxGeometry x="640" y="40" width="200" height="140" as="geometry"/></mxCell>
+        <mxCell id="m4" value="ShiftManager" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="model-group"><mxGeometry x="900" y="40" width="200" height="140" as="geometry"/></mxCell>
+
+        <!-- EXTERNAL SYSTEMS -->
+        <mxCell id="ext-group" value="External Systems" style="swimlane;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="900" width="1520" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="Dobot Robotic Arms&#xa;(TCP Clients)" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="ext-group"><mxGeometry x="40" y="40" width="200" height="50" as="geometry"/></mxCell>
+        <mxCell id="e2" value="SQL Server REST API" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="ext-group"><mxGeometry x="340" y="40" width="260" height="50" as="geometry"/></mxCell>
+        <mxCell id="e3" value="JSON Log Files&#xa;(Raw Data)" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="ext-group"><mxGeometry x="660" y="40" width="220" height="50" as="geometry"/></mxCell>
+        <mxCell id="e4" value="Production JSON (MỚI)&#xa;(Hourly Snapshots)" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="ext-group"><mxGeometry x="1020" y="40" width="240" height="50" as="geometry"/></mxCell>
+
+        <!-- CENTRAL WIRING NOTE -->
+        <mxCell id="wiring" value="main.py (Wiring Hub)&#xa;&#xa;- Trạm đấu dây tập trung duy nhất&#xa;- Nối 100% Signal/Slot tại đây" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="1280" y="400" width="250" height="80" as="geometry"/></mxCell>
+
+        <!-- CONNECTIONS -->
+        <mxCell id="c1" value="signal_line_data_updated" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FF6600;strokeWidth=2;dashed=1;fontSize=10;fontColor=#FF6600;" edge="1" parent="1" source="m2" target="vm1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="c2" value="signal_time" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FF6600;strokeWidth=2;dashed=1;fontSize=10;fontColor=#FF6600;" edge="1" parent="1" source="vm1" target="v3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="c3" value="signal_summary_updated" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FF6600;strokeWidth=2;dashed=1;fontSize=10;fontColor=#FF6600;" edge="1" parent="1" source="vm1" target="v1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="c4" value="signal_update_ui" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FF6600;strokeWidth=2;dashed=1;fontSize=10;fontColor=#FF6600;" edge="1" parent="1" source="vm2" target="v4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        
+        <!-- NEW SIGNALS -->
+        <mxCell id="c_new1" value="signal_hourly_data (Mỗi 1 Phút)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FF6600;strokeWidth=3;dashed=1;fontSize=11;fontStyle=1;fontColor=#FF6600;" edge="1" parent="1" source="vm1" target="vm4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="c_new2" value="signal_table_data_ready (Mảng 2D)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FF6600;strokeWidth=3;dashed=1;fontSize=11;fontStyle=1;fontColor=#FF6600;" edge="1" parent="1" source="vm4" target="v5"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Internal Data (Red) & External (Purple) -->
+        <mxCell id="io1" value="Raw TCP Data" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;strokeColor=#CC0000;fontSize=10;fontColor=#CC0000;" edge="1" parent="1" source="m1" target="m2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="io2" value="TCP Socket" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=3;strokeColor=#9673a6;fontSize=10;fontColor=#9673a6;" edge="1" parent="1" source="e1" target="m1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="io3" value="Save/Load JSON" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;strokeColor=#9673a6;dashed=1;fontSize=11;fontStyle=1;fontColor=#9673a6;" edge="1" parent="1" source="vm4" target="e4"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- LEGEND -->
+        <mxCell id="legend" value="LEGEND" style="swimlane;startSize=25;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="620" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="l1" value="" style="endArrow=classic;strokeColor=#FF6600;strokeWidth=2;dashed=1;" edge="1" parent="legend"><mxGeometry relative="1" as="geometry"><mxPoint x="20" y="40" as="sourcePoint"/><mxPoint x="60" y="40" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="l1t" value="Data Binding (Signal)" style="text;fontSize=10;" vertex="1" parent="legend"><mxGeometry x="70" y="30" width="150" height="20" as="geometry"/></mxCell>
+        
+        <mxCell id="l2" value="" style="endArrow=classic;strokeColor=#0000FF;strokeWidth=2;" edge="1" parent="legend"><mxGeometry relative="1" as="geometry"><mxPoint x="20" y="65" as="sourcePoint"/><mxPoint x="60" y="65" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="l2t" value="Commands (Method)" style="text;fontSize=10;" vertex="1" parent="legend"><mxGeometry x="70" y="55" width="150" height="20" as="geometry"/></mxCell>
+        
+        <mxCell id="l3" value="" style="endArrow=classic;strokeColor=#9673a6;strokeWidth=3;" edge="1" parent="legend"><mxGeometry relative="1" as="geometry"><mxPoint x="20" y="90" as="sourcePoint"/><mxPoint x="60" y="90" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="l3t" value="File/Network I/O" style="text;fontSize=10;" vertex="1" parent="legend"><mxGeometry x="70" y="80" width="150" height="20" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

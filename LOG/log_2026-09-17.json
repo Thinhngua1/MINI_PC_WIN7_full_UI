@@ -1,1 +1,5 @@
 {"message": {"machine": "DRB_03", "model": "A175", "total": "700", "qtyOk": "900", "qtyNg": "300", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "wait_material", "date": "2026-09-17", "time": "2026-09-17 13:53:25"}}
+{"message": {"machine": "DRB_03", "model": "A175", "total": "700", "qtyOk": "900", "qtyNg": "300", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "wait_material", "date": "2026-09-17", "time": "2026-09-17 16:53:18"}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "700", "qtyOk": "900", "qtyNg": "300", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "wait_material", "date": "2026-09-17", "time": "2026-09-17 16:53:37"}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "700", "qtyOk": "900", "qtyNg": "300", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "", "date": "2026-09-17", "time": "2026-09-17 16:53:55"}}
+{"message": {"machine": "DRB_01", "model": "A175", "total": "900", "qtyOk": "900", "qtyNg": "300", "rate": "90", "shifts": "1", "type": "Change Tray", "message": "", "date": "2026-09-17", "time": "2026-09-17 16:54:10"}}
