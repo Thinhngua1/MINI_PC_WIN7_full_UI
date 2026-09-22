@@ -72,6 +72,27 @@ class DashboardViewModel(QObject):
         # update summary  
         self.calculate_summary()
 
+    #luồng data từ RB server
+    def update_time_data(self, clean_dict):
+        # """Hứng data thời gian (Luồng số 2) từ DataParser bắn sang"""
+        machine_id = clean_dict.get("machine_id")
+        
+        # # Nếu máy này có tồn tại trong danh sách quản lý
+        # if machine_id in self.lines:
+        #     # Vứt cục data trạng thái cho máy đó tự nhai
+        #     self.lines[machine_id].update_status_from_client(clean_dict)
+
+        # === RADAR DÒ DATA ĐẾN DASHBOARD ===
+        print(f"\n[RADAR] Dashboard nhận data Luồng 2: {clean_dict}")
+        print(f"[RADAR] Đang tìm máy: '{machine_id}' trong kho: {list(self.lines.keys())}")
+        # ===================================
+        
+        if machine_id in self.lines:
+            self.lines[machine_id].update_status_from_client(clean_dict)
+            print(f"[RADAR] Đã nhét data Luồng 2 thành công vào máy {machine_id}!")
+        else:
+            print(f"[RADAR] CẢNH BÁO: Tên máy '{machine_id}' không khớp! TỪ CHỐI NHẬN DATA!")
+
     
     def calculate_summary(self):
         #1. tạo các biến, thêm vào signal_summary_updated sau
@@ -110,7 +131,12 @@ class DashboardViewModel(QObject):
         h, m, s = now.time().hour(), now.time().minute(), now.time().second()
         shift_str = "1(08:00-20:00)" if 8 <= h < 20 else "2(20:00-08:00)"
 
-        # 1 phút bắn 1 lần
+        # THÊM ĐOẠN NÀY ĐỂ KÍCH HOẠT ĐỒNG HỒ OEE CỦA TỪNG MÁY
+        # Lặp qua tất cả các máy và hô khẩu lệnh: "Cộng 1 giây!"
+        for line_vm in self.lines.values():
+            line_vm.tick_1_second()
+
+        # 1 phút bắn 1 lần -> snapshot lưu data
         if m != self.last_minute:
             self.last_minute = m
 
@@ -129,7 +155,12 @@ class DashboardViewModel(QObject):
             self.signal_hourly_data.emit(hour_str, snapshot_data)
         self.signal_time.emit(time_str,shift_str)
 
-    
+                # ==========================================
+        # KÍCH HOẠT ĐỒNG HỒ OEE:
+        # ==========================================
+        for machine_id, line_vm in self.lines.items():
+            if hasattr(line_vm, 'tick_1_second'):
+                line_vm.tick_1_second()
 
 # ===================== đã test ok ==========
 # nếu nỗi path, dùng python -m viewmodels.dashboard_vm.

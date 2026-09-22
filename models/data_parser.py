@@ -10,7 +10,10 @@ from models.api_publisher import ApiPublisherModel
 from PyQt5.QtCore  import QObject, pyqtSignal
 
 class DataParserModel(QObject):
+    # luồng RB làm client
     signal_log_of_dataParser = pyqtSignal(str)
+    # luồng RB làm server
+    signal_client_data = pyqtSignal(dict) 
 
     def __init__(self):
         super().__init__()# kế thừa cho signal
@@ -85,6 +88,16 @@ class DataParserModel(QObject):
             print(f"[DataParser] Lỗi phân tích dữ liệu: {e}")
             return None 
 
+    def parse_TCP_client (self, raw_data_TCP_client):
+
+        print(f"[RADAR PARSER] Đã nhận dict từ Manager: {raw_data_TCP_client}") # test data from TCP_client manager
+        # 1. Nhận data_dict từ TCP Client Manager
+        # {{"machine_id": "DRB_01","robot_mode":7, "ErrorStatus":0}, .....}
+        clean_data = raw_data_TCP_client
+        # 2. Xử lý( ko làm gì, đảm bảo MVVM)
+        
+        # 3.  bắn Signal
+        self.signal_client_data.emit(clean_data)
 
 if __name__ == "__main__":
     # Import các module cần thiết để test

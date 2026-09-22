@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication
 from models.tcp_server import TcpServerModel
 from models.data_parser import DataParserModel
 from models.api_publisher import ApiPublisherModel
+from models.tcp_client_manager import TcpClientManager
 
 # 2. Import các lớp ViewModels
 from viewmodels.dashboard_vm import DashboardViewModel
@@ -32,6 +33,7 @@ def main():
         # --- KHỞI TẠO TẦNG MODEL ---
     tcp_port = config.get('network', {}).get('tcp_listen_port', 8500)
     tcp_server = TcpServerModel(tcp_port)
+    data_parser_ = DataParserModel()
 
     
     # --- KHỞI TẠO TẦNG VIEW ---
@@ -67,6 +69,17 @@ def main():
     main_window.signal_request_load_data.connect(production_vm.load_data_by_date)
 
     production_vm.signal_table_data_ready.connect(main_window.update_production_table)
+
+
+    #============ Luồng data từ x máy server()
+    tcp_client_manager = TcpClientManager()
+
+    tcp_client_manager.signal_manager_rcv.connect(data_parser_.parse_TCP_client)
+
+    data_parser_.signal_client_data.connect(dashboard_vm.update_time_data)
+
+    tcp_client_manager.start_all_clients()
+
 
     main_window.show()
     

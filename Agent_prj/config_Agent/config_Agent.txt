@@ -21,7 +21,8 @@ Ví dụ: "Đây là class TcpService để xử lý mạng, đây là MainViewM
 bạn đừng viết toàn bộ app cùng lúc, code sẽ rất dài và tôi  không thể kiểm soát được.
 Hãy đi từng tính năng. Ví dụ: "Hôm nay chúng ta làm module TCP Server trước. Viết code cho tôi phần này".
 bạn viết hoặc tôi sẽ viết code theo gợi ý của bạn. Nhiệm vụ của tôi là đọc hiểu/code, chạy thử, copy vào máy tôi. Dòng nào, hàm nào không hiểu -> Hỏi ngay.
-nếu bạn viết code gợi ý, hãy giữ nguyên các chú thích hoặc ít can thiệp nhất vào chú thích hiện tại của phần code mà bạn đang sửa
+nếu bạn viết code gợi ý, hãy giữ nguyên các chú thích hoặc ít can thiệp nhất vào chú thích hiện tại của phần code mà bạn đang sửa(
+
 4. Tự tay hoàn thiện (tôi làm)
 
 Khi đã có bộ khung chuẩn và một vài module mẫu, tôi sẽ bắt đầu quen tay.
@@ -35,11 +36,6 @@ Sau khi làm xong mỗi bước, hãy ghi ra Patch Note (nhật ký thay đổi)
 
 context: 
 
-Folder này là một công cụ mà tôi vừa tạo ra trong dự án trước.
-Bối cảnh dự án trước:
-
- Cụ thể folder này là một tool khá giống với Hecules để thiết lập kết nối TCP client và TCP server sau đấy đẩy lên SQL Server.
-Context dự án hiện tại:
    - Về cách làm việc
 trong dự án này tôi muốn cải tiến cách làm việc
 Trong dự án trước, cách làm việc của tôi là tự vẽ luồng, sau đấy code đến đâu hỏi AI đến đấy(nên code trông như hiện tại). 
@@ -78,7 +74,17 @@ Vòng tròn OEE 0.0%: Sử dụng giải pháp "Mockup" tạm thời bằng 1 QL
 
 Menu Trái (Mở rộng): Giữ nguyên nhưng đưa vào QScrollArea. Gắn các nút cơ bản ( Overview, Equipment, alarm, History, production,Quality, energy Monitor, Trend, Data log) và sẵn sàng không gian cho các tính năng tương lai.
 
-16_9: sếp bổ sung thêm idle time(thời gian dừng máy mà ko lỗi,), loss time, error time
+
+18_9: sếp bổ sung thêm idle time(thời gian dừng máy mà ko lỗi,chờ hàng), loss time(tg setting máy), error time
+Cần thêm tính năng đọc data từ các cổng 30005 của dobot. Đặc tính là chỉ cần conect, các cổng tự nhả data liên tục 1440 byte mỗi 200 ms.
+
+tổng kết cách tính: 
+chủ yếu là dữ liệu lấy lúc máy đang running. sau sửa chương trình robot cho nó gửi thông báo là được
+robot_mode = 7 and runMode = 'pause' cho đến khi robot mode running và runMode = 'run' -> loss
+((robot_mode = 7 and runMode = 'wait') or (not (robot_mode = 9 or robot_mode = 7))) and (không trong thời gian loss)  -> idle
+(robot_mode = 7g and runMode = 'error:...) or (robot_mode = 9 ) -> error
+ 
+chú ý: runMode = message, 
 
 Plan
 Hiện tại xây dựng hệ thống theo luồng trong file "kiến trúc mạng". Trong đó, tôi dùng TCP server là chủ yếu, nên file và code TCP client sẽ đc loại khỏi hệ thống(sau này cần sẽ tích hợp sau)

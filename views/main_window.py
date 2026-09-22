@@ -187,10 +187,10 @@ class MainWindow(QMainWindow):
                 for machine_id, card_widget in self.machine_cards.items():
                     # Lấy dữ liệu type hiện tại của máy đó từ ViewModel
 
-                    current_type = str(getattr(self.dashboard_vm.lines[machine_id], 'type', '') or "").strip()
-                    current_filter = getattr(self, 'current_line_filter', None)
+                    current_type = str(getattr(self.dashboard_vm.lines[machine_id], 'type', '') or "").strip().lower()
+                    current_filter = str(getattr(self, 'current_line_filter', None)).strip().lower()
                     
-                    line_monitor_modes = ["Change Tray", "Function", "AUTOTAPE", "MEDITECH", "PRESSTAPE", "CTC", "X-RAY"]
+                    line_monitor_modes =["change tray", "function", "autotape", "meditech", "presstape", "ctc", "x-ray"]
                     
                     # đứng ở bất kỳ Tab nào thuộc Line Monitor, phải check ẩn/hiện liên tục
                     if current_filter in line_monitor_modes:
@@ -216,14 +216,32 @@ class MainWindow(QMainWindow):
 
         # --- LOGIC TỰ BỐC HƠI KHI ROBOT ĐỔI TYPE ---
         # Lấy type mới nhất vừa được cập nhật, gọt dấu cách
-        current_type = str(getattr(line_vm, 'type', '') or "").strip()
+        current_type = str(getattr(line_vm, 'type', '') or "").strip().lower()
+        current_filter = str(getattr(self, 'current_line_filter', '')).strip().lower()
         
         # Nếu đang đứng ở màn hình Line Monitor thì kiểm tra để Ẩn/Hiện thẻ ngay lập tức
-        if getattr(self, 'current_line_filter', None) in ["Change Tray", "Function"]:
-            if current_type == self.current_line_filter:
+        if current_filter in ["change tray", "function"]:
+            if current_type == current_filter:
                 card_widget.setVisible(True)
             else:
                 card_widget.setVisible(False)
+
+        #update time of OEE
+        # Hàm con: Biến đổi giây (vd: 125s) thành chuỗi (vd: "00:02:05")
+        def format_sec(seconds):
+            h, rem = divmod(seconds, 3600)
+            m, s = divmod(rem, 60)
+            return f"{h:02d}:{m:02d}:{s:02d}"
+
+        # Bơm data cho hộp DAY SHIFT
+        card_widget.lbl_day_idle.setText(format_sec(line_vm.day_idle_time))
+        card_widget.lbl_day_loss.setText(format_sec(line_vm.day_loss_time))
+        card_widget.lbl_day_error.setText(format_sec(line_vm.day_error_time))
+
+        # Bơm data cho hộp NIGHT SHIFT
+        card_widget.lbl_night_idle.setText(format_sec(line_vm.night_idle_time))
+        card_widget.lbl_night_loss.setText(format_sec(line_vm.night_loss_time))
+        card_widget.lbl_night_error.setText(format_sec(line_vm.night_error_time))
 
     def update_summary_ui(self, summary_data):      
         """Cập nhật phần Summary chung ở trên cùng."""
@@ -437,7 +455,6 @@ class MainWindow(QMainWindow):
             
         # Bốc đủ 24 số rồi thì gọi hàm Vẽ!
         self.draw_production_chart(machine_id, x_labels, y_values)
-        
 
 if __name__ == "__main__":
      pass
