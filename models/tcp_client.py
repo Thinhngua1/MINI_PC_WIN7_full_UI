@@ -54,8 +54,8 @@ class TCPclientModel(QObject):
             except ConnectionRefusedError:
                 print("[Client] Loi: server chua bat hoac tu choi ket noi")
                 time.sleep(1)
-            except Exception: #Exception 
-                print("[Client] loi void server ko xac dinh") 
+            except Exception as e: #Exception 
+                print(f"[Client] loi void server ko xac dinh {e}") 
                 time.sleep(1) 
 
     
@@ -111,8 +111,9 @@ class TCPclientModel(QObject):
                     )
                     
                     dict_raw = {"robot_mode":robot_mode, "ErrorStatus":ErrorStatus,}
-                        
-                    print(text)
+
+                    #test Data of client    
+                    # print(text)
                     
                     self.signal_rcv_by_server.emit(dict_raw)
 

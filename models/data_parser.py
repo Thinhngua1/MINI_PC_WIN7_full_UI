@@ -89,8 +89,8 @@ class DataParserModel(QObject):
             return None 
 
     def parse_TCP_client (self, raw_data_TCP_client):
-
-        print(f"[RADAR PARSER] Đã nhận dict từ Manager: {raw_data_TCP_client}") # test data from TCP_client manager
+        # test data from TCP_client manager
+        # print(f"[RADAR PARSER] Đã nhận dict từ Manager: {raw_data_TCP_client}") 
         # 1. Nhận data_dict từ TCP Client Manager
         # {{"machine_id": "DRB_01","robot_mode":7, "ErrorStatus":0}, .....}
         clean_data = raw_data_TCP_client

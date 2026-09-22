@@ -77,23 +77,12 @@ class DashboardViewModel(QObject):
         # """Hứng data thời gian (Luồng số 2) từ DataParser bắn sang"""
         machine_id = clean_dict.get("machine_id")
         
-        # # Nếu máy này có tồn tại trong danh sách quản lý
-        # if machine_id in self.lines:
-        #     # Vứt cục data trạng thái cho máy đó tự nhai
-        #     self.lines[machine_id].update_status_from_client(clean_dict)
-
-        # === RADAR DÒ DATA ĐẾN DASHBOARD ===
-        print(f"\n[RADAR] Dashboard nhận data Luồng 2: {clean_dict}")
-        print(f"[RADAR] Đang tìm máy: '{machine_id}' trong kho: {list(self.lines.keys())}")
-        # ===================================
-        
+        # Nếu máy này có tồn tại trong danh sách quản lý
         if machine_id in self.lines:
+            # Vứt cục data trạng thái cho máy đó tự nhai
             self.lines[machine_id].update_status_from_client(clean_dict)
-            print(f"[RADAR] Đã nhét data Luồng 2 thành công vào máy {machine_id}!")
-        else:
-            print(f"[RADAR] CẢNH BÁO: Tên máy '{machine_id}' không khớp! TỪ CHỐI NHẬN DATA!")
 
-    
+   
     def calculate_summary(self):
         #1. tạo các biến, thêm vào signal_summary_updated sau
         total_machine = len(self.lines) 

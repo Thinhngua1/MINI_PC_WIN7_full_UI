@@ -30,8 +30,7 @@ class TcpClientManager(QObject):
             # 3. Gom dây tín hiệu của máy này vào trạm quản lý client
             # Dùng thủ thuật m_id=machine_id để tránh bị đè biến trong vòng lặp for
             client_obj.signal_rcv_by_server.connect(
-                # lambda data_dict, m_id=machine_id: self.on_client_receive(m_id, data_dict)
-                functools.partial(self.on_client_receive, machine_id)
+                lambda data_dict, m_id=machine_id: self.on_client_receive(m_id, data_dict)
             )
             
             # Lưu vào danh sách để quản lý (sau này cần ngắt kết nối thì gọi ra)
@@ -55,15 +54,15 @@ class TcpClientManager(QObject):
             self.config = {}
 
         machines = self.config_file_path.get("machines", [])
-        servers = self.config_file_path.get("server", [])
+
 
         robot_list = []
 
-        for machine, server in zip(machines, servers):
+        for machine in machines:
             robot_list.append({
                 "machine_id": machine.get("id"),
-                "ip": server.get("ip"),
-                "port": int(server.get("port", 30005)),
+                "ip": machine.get("ip"),
+                "port": int(machine.get("port", 30005)),
             })
 
         return robot_list
@@ -71,8 +70,8 @@ class TcpClientManager(QObject):
         # Trả về mẫu: [{"machine_id": "DRB_01", "ip": "192.168.1.10", "port": 5000}, ...]
         
     def on_client_receive(self, machine_id, data_dict):
-        print(f"[RADAR MANAGER] Đã nhận dict từ luồng 2: {data_dict} của máy {machine_id}") # Test data từ TCP_client
-        """Hàm này tự động nảy số khi BẤT KỲ máy nào gửi data về"""
+        # Test data từ TCP_client
+        # print(f"[RADAR MANAGER] Đã nhận dict từ luồng 2: {data_dict} của máy {machine_id}")
         # Nhét thêm ID của máy vào data để DataParser biết cục data này của thằng nào
         data_dict["machine_id"] = machine_id
         

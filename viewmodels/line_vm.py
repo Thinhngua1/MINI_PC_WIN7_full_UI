@@ -79,8 +79,8 @@ class LineViewModel(QObject):
     def evaluate_status(self):
         self.message_ = str(self.message).strip().lower()
 
-                # === CHÈN DÒNG PRINT NÀY ĐỂ SOI DATA ===
-        print(f"\n[DEBUG] Máy: {self.machine_id} | robot_mode: {self.robot_mode} | error_status: {self.error_status} | message: '{self.message_}'")
+                # === check data từ Dashboard_VM ===
+        # print(f"\n[DEBUG] Máy: {self.machine_id} | robot_mode: {self.robot_mode} | error_status: {self.error_status} | message: '{self.message_}'")
         
         if self.robot_mode == 7 and 'pause' in self.message_ :
             self.is_loss_mode = True
@@ -89,7 +89,7 @@ class LineViewModel(QObject):
             self.is_loss_mode = False
 
         # Dịch mã trạng thái
-        if (self.error_status != 0) or ('error' in self.message_) or (self.robot_mode == 9):
+        if (self.error_status != 0) or (self.robot_mode == 7 and 'error' in self.message_) or (self.robot_mode == 9):
             self.status = "ERROR"
         elif self.is_loss_mode: 
             self.status = "LOSS"
