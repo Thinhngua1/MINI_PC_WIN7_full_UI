@@ -1,11 +1,12 @@
 import os
 from PyQt5.QtWidgets import QMainWindow, QWidget, QTreeWidgetItem, QTableWidgetItem, QButtonGroup, QAbstractItemView
 from PyQt5 import uic
-from PyQt5.QtCore import Qt,QDate, pyqtSignal
+from PyQt5.QtCore import Qt,QDate, pyqtSignal,QEvent
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PyQt5.QtWidgets import QVBoxLayout
+from views.machine_dashboard_dialog import MachineDashboardDialog
 
 
 class MainWindow(QMainWindow):
@@ -24,6 +25,8 @@ class MainWindow(QMainWindow):
         
         # Dictionary chứa các tham chiếu đến UI của từng máy để dễ dàng update (Card UI)
         self.machine_cards = {}
+            # Map widget → machine_id để eventFilter tra nhanh
+        self._widget_to_machine = {}
 
         # Ghi nhớ Tab đang mở mặc định để lọc UI
         self.current_line_filter = "Change Tray"
@@ -79,6 +82,12 @@ class MainWindow(QMainWindow):
             
             # Lưu lại reference để update sau này
             self.machine_cards[machine_id] = card_widget
+
+            # Gắn sự kiện click: mở Sub-Dashboard popup khi user click vào thẻ
+            # Gắn event filter lên card VÀ toàn bộ widget con bên trong
+            self._widget_to_machine[card_widget] = machine_id
+            card_widget.installEventFilter(self)
+
 
             # Nối tín hiệu từ LineViewModel vào Slot update của View
             line_vm.signal_update_ui.connect(lambda card=card_widget, vm=line_vm: self.update_card_ui(card, vm))
@@ -242,6 +251,15 @@ class MainWindow(QMainWindow):
         card_widget.lbl_night_idle.setText(format_sec(line_vm.night_idle_time))
         card_widget.lbl_night_loss.setText(format_sec(line_vm.night_loss_time))
         card_widget.lbl_night_error.setText(format_sec(line_vm.night_error_time))
+
+    def open_machine_dashboard(self, machine_id):
+        """Mở Sub-Dashboard popup khi user click vào thẻ máy."""
+        line_vm = self.dashboard_vm.lines.get(machine_id)
+        if line_vm is None:
+            return
+        dialog = MachineDashboardDialog(line_vm, parent=self)
+        dialog.setWindowTitle(f"Machine Dashboard  —  {machine_id}")
+        dialog.exec_()   # Modal: chặn lại cho đến khi user đóng
 
     def update_summary_ui(self, summary_data):      
         """Cập nhật phần Summary chung ở trên cùng."""
@@ -455,6 +473,16 @@ class MainWindow(QMainWindow):
             
         # Bốc đủ 24 số rồi thì gọi hàm Vẽ!
         self.draw_production_chart(machine_id, x_labels, y_values)
+
+    def eventFilter(self, a0, a1):
+        """Bắt sự kiện click từ thẻ máy và mọi widget con bên trong thẻ."""
+        # Dùng a1.type() và QEvent.Type.MouseButtonPress để VS Code không báo lỗi ảo
+        if a1.type() == QEvent.Type.MouseButtonPress:
+            machine_id = self._widget_to_machine.get(a0)
+            if machine_id:
+                self.open_machine_dashboard(machine_id)
+                return True   # Đã xử lý, không cho event lan tiếp
+        return super().eventFilter(a0, a1)
 
 if __name__ == "__main__":
      pass

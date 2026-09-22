@@ -70,3 +70,21 @@ g_count -> Tính tỷ lệ OEE -> Đếm máy đang RUNNING -> Đóng gói vào 
 **Hướng dẫn phát triển tiếp:**
 - User mở Qt Designer chỉnh sửa thẩm mỹ cho 2 file UI (không đổi tên ObjectName để giữ Binding).
 - Bắt đầu chạy test thử từ file `main.py`.
+
+
+## [v0.2.0] - Giai đoạn 2: Tích hợp TCP Client & Tính toán OEE
+### Thêm mới (Added)
+- Tích hợp thành công luồng TCP Client (Port 30005) thông qua TcpClientManager quản lý mảng Object đa luồng.
+- Cơ chế Máy trạng thái (State Machine) OEE: Chuyển quyền quyết định trạng thái (RUNNING, IDLE, LOSS, ERROR) vào LineViewModel thông qua hàm evaluate_status().
+- Tích hợp QTimer nhịp 1 giây (	ick_1_second) để tự động cộng dồn thời gian Ca Ngày / Ca Đêm dựa vào giờ hệ thống.
+
+### Thay đổi (Changed)
+- **Fix TCP Fragmentation:** Xử lý triệt để lỗi thiếu/ghép gói tin TCP bằng cơ chế uffer += chunk. Đảm bảo độ mượt mà khi unpack chuẩn 1440 bytes.
+- **Fix Signal Dropping:** Áp dụng unctools.partial thay cho lambda để khắc phục lỗi mất tín hiệu (băng qua Thread) từ TCP Client lên Main UI.
+- Tối giản hóa Giao diện Thẻ máy (ẩn bộ đếm 
+un_time).
+
+### Kế hoạch (Planned)
+- Bổ sung và tinh chỉnh giao diện cho các thẻ (Line Card) để hiển thị trực quan thông số OEE Ca Ngày / Ca Đêm.
+- Căn chỉnh Layout, GroupBox và CSS (màu sắc/bố cục) để giao diện thẻ nhìn hiện đại.
+- Test tổng thể luồng UI Card khi có nhiều máy chạy song song.

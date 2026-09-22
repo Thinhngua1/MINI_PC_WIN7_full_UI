@@ -52,10 +52,10 @@ class TCPclientModel(QObject):
                 time.sleep(0.5)
 
             except ConnectionRefusedError:
-                print("[Client] Loi: server chua bat hoac tu choi ket noi")
+                # print("[Client] Loi: server chua bat hoac tu choi ket noi")
                 time.sleep(1)
             except Exception as e: #Exception 
-                print(f"[Client] loi void server ko xac dinh {e}") 
+                # print(f"[Client] loi void server ko xac dinh {e}") 
                 time.sleep(1) 
 
     

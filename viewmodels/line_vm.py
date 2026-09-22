@@ -21,7 +21,7 @@ class LineViewModel(QObject):
 
         #  PHẢI KHAI BÁO MẶC ĐỊNH ĐỂ KHÔNG BỊ LỖI KHI LUỒNG 1(TCP server) CHẠY TRƯỚC
         self.error_status = 0
-        self.robot_mode = -1
+        self.robot_mode = 7
         self.message_ = ""
         self.is_loss_mode = False
 
@@ -37,6 +37,9 @@ class LineViewModel(QObject):
         self.night_idle_time = 0
         self.night_loss_time = 0
         self.night_error_time = 0
+
+        # Lịch sử lỗi của riêng máy này
+        self.error_history = []
 
     def update_data(self, parsed_data: dict):
         # Rút số liệu từ Dictionary và gán vào bản thân ông Trưởng Line
@@ -77,6 +80,7 @@ class LineViewModel(QObject):
         self.signal_update_ui.emit()
 
     def evaluate_status(self):
+        previous_status = self.status
         self.message_ = str(self.message).strip().lower()
 
                 # === check data từ Dashboard_VM ===
@@ -98,7 +102,20 @@ class LineViewModel(QObject):
         else:
             self.status = "RUNNING"
 
-
+        # Ghi nhận lịch sử lỗi khi bắt đầu xuất hiện lỗi mới
+        # Ghi nhận lịch sử khi có sự cố: ERROR, LOSS hoặc IDLE
+        if self.status in ["ERROR", "LOSS", "IDLE"] and previous_status != self.status:
+            timestamp = datetime.now().strftime("%H:%M:%S")
+            
+            # Xuất toàn bộ nội dung message gốc (không tự động viết thường)
+            raw_message = str(self.message).strip()
+            error_msg = raw_message if raw_message else f"Mã lỗi: {self.error_status}"
+            
+            self.error_history.insert(0, {"time": timestamp, "status": self.status, "message": error_msg})
+            
+            # Giữ tối đa 50 lỗi gần nhất để nhẹ RAM
+            if len(self.error_history) > 50:
+                self.error_history.pop()
 
     def tick_1_second(self):
  
