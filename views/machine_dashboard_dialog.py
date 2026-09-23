@@ -33,10 +33,18 @@ class MachineDashboardDialog(QDialog):
 
     def _setup_error_table(self):
         """Cài đặt cột cho bảng lỗi. Chỉ gọi 1 lần lúc khởi tạo."""
-        # Cột cuối (Thông báo) tự kéo dãn hết phần còn lại
-        self.tbl_error_log.horizontalHeader().setStretchLastSection(True)
-        self.tbl_error_log.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        self.tbl_error_log.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        header = self.tbl_error_log.horizontalHeader()
+        
+        # Các cột ngắn: tự fit theo nội dung
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)  # Status
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)  # Code
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Số lần
+        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)  # Phát sinh gần nhất
+        header.setSectionResizeMode(5, QHeaderView.ResizeToContents)  # Xử lý gần nhất
+        
+        # Cột 2 "Nội dung cảnh báo" chiếm hết phần còn lại  ← # Update
+        header.setSectionResizeMode(2, QHeaderView.Stretch)
+        header.setStretchLastSection(False)  # Tắt stretch mặc định ở cột cuối
 
         # Chỉ đọc, không cho edit
         self.tbl_error_log.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -79,34 +87,69 @@ class MachineDashboardDialog(QDialog):
         self.lbl_sub_night_idle.setText(fmt(vm.night_idle_time))
 
         # ---- Bảng Lỗi Cảnh Báo Của Máy ----
-        # error_history đã được lưu theo thứ tự mới nhất trước (insert(0,...))
+        # Gom nhóm lỗi để đếm Số lần, Lần xuất hiện gần nhất và Lần xử lý gần nhất
         logs = vm.error_history
-        self.tbl_error_log.setRowCount(len(logs))
+        aggregated_logs = {}
+        
+        # Duyệt từ cũ nhất đến mới nhất để update thời gian (last_occurred sẽ lấy cái mới nhất)
+        for entry in reversed(logs):
+            status = entry.get("status", "ERROR")
+            code = str(entry.get("code", 0))
+            message = entry.get("message", "")
+            key = (status, code, message)
+            
+            if key not in aggregated_logs:
+                aggregated_logs[key] = {
+                    "count": 0,
+                    "last_occurred": "",
+                    "last_resolved": ""
+                }
+            
+            aggregated_logs[key]["count"] += 1
+            aggregated_logs[key]["last_occurred"] = entry.get("time", "")
+            # Ưu tiên lưu thời gian xử lý của lần gần nhất
+            if entry.get("resolved_time"):
+                aggregated_logs[key]["last_resolved"] = entry.get("resolved_time")
 
-        for row, entry in enumerate(logs):
-            time_item   = QTableWidgetItem(entry.get("time", ""))
-            status_item = QTableWidgetItem(entry.get("status", "ERROR"))
-            msg_item    = QTableWidgetItem(entry.get("error", entry.get("message", "")))
+        # Lấy danh sách đã gom nhóm, xếp lại theo cái nào vừa xảy ra gần nhất lên trên
+        sorted_logs = sorted(aggregated_logs.items(), key=lambda x: x[1]["last_occurred"], reverse=True)
+        
+        self.tbl_error_log.setRowCount(len(sorted_logs))
 
-            # Căn giữa 2 cột đầu
-            time_item.setTextAlignment(Qt.AlignCenter)
-            status_item.setTextAlignment(Qt.AlignCenter)
+        for row, (key, data) in enumerate(sorted_logs):
+            _, code, message = key
+            # Nếu đã có resolved_time → "Resolved", chưa có → "Active"  ← # Update
+            status_text = "Resolved" if data["last_resolved"] else "Active"
+            
+            status_item   = QTableWidgetItem(status_text)
+            code_item     = QTableWidgetItem(code)
+            msg_item      = QTableWidgetItem(message)
+            count_item    = QTableWidgetItem(str(data["count"]))
+            occur_item    = QTableWidgetItem(data["last_occurred"])
+            resolv_item   = QTableWidgetItem(data["last_resolved"])
+
+            # Căn giữa các cột thông số ngắn
+            for item in [status_item, code_item, count_item, occur_item, resolv_item]:
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
             # Tô màu theo trạng thái
-            status_val = entry.get("status", "ERROR")
-            if status_val == "ERROR":
-                status_item.setForeground(Qt.red)
-            elif status_val == "LOSS":
-                status_item.setForeground(Qt.yellow)
+            if status_text == "Active":
+                status_item.setForeground(Qt.GlobalColor.red)
+            else:
+                status_item.setForeground(Qt.GlobalColor.green)
 
-            self.tbl_error_log.setItem(row, 0, time_item)
-            self.tbl_error_log.setItem(row, 1, status_item)
+
+            self.tbl_error_log.setItem(row, 0, status_item)
+            self.tbl_error_log.setItem(row, 1, code_item)
             self.tbl_error_log.setItem(row, 2, msg_item)
+            self.tbl_error_log.setItem(row, 3, count_item)
+            self.tbl_error_log.setItem(row, 4, occur_item)
+            self.tbl_error_log.setItem(row, 5, resolv_item)
 
-    def closeEvent(self, event):
+    def closeEvent(self, a0):
         """Ngắt kết nối signal khi Dialog đóng để tránh memory leak."""
         try:
             self.line_vm.signal_update_ui.disconnect(self._refresh_ui)
         except TypeError:
             pass  # Đã bị disconnect trước đó thì bỏ qua
-        super().closeEvent(event)
+        super().closeEvent(a0)

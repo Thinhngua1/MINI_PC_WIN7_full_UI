@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GlobalAlarms</class>
+ <widget class="QDialog" name="GlobalAlarms">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Global Alarms</string>
+  </property>
+  <property name="styleSheet">
+   <string>
+QDialog { background-color: #0b1a2a; }
+QLabel { color: white; font-family: Arial; font-weight: bold; }
+QTableWidget { background-color: #0d2035; color: white; border: 1px solid #1c3b5a; font-family: Arial; font-size: 12px; }
+QHeaderView::section { background-color: #0f2a40; color: #f1c40f; font-weight: bold; padding: 4px; border: 1px solid #1c3b5a; }
+QPushButton { background-color: #1c3b5a; color: white; border: 1px solid #2a5a8a; border-radius: 4px; padding: 6px; font-weight: bold; }
+QPushButton:hover { background-color: #2a5a8a; }
+QComboBox { background-color: #0d2035; color: white; border: 1px solid #1c3b5a; padding: 4px; }
+QComboBox QAbstractItemView { background-color: #0d2035; color: white; selection-background-color: #1a426e; }
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="lbl_title">
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string>color: #f1c40f; padding: 10px;</string>
+     </property>
+     <property name="text">
+      <string>TẤT CẢ CẢNH BÁO CÁC MÁY (ALL MACHINES ALARMS)</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="filterLayout">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Machine:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cmb_machine">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Trạng thái:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cmb_status">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tbl_global_errors">
+     <column>
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Machine</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Code</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Nội dung cảnh báo</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Số lần</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Phát sinh gần nhất</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Xử lý gần nhất</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="footerLayout">
+     <item>
+      <widget class="QLabel" name="lbl_footer">
+       <property name="text">
+        <string>TỔNG HỢP CẢNH BÁO TOÀN NHÀ MÁY</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_close">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>ĐÓNG (ESC)</string>
+       </property>
+       <property name="shortcut">
+        <string>Esc</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

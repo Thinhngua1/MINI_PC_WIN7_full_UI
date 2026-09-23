@@ -102,16 +102,26 @@ class LineViewModel(QObject):
         else:
             self.status = "RUNNING"
 
-        # Ghi nhận lịch sử lỗi khi bắt đầu xuất hiện lỗi mới
+        # Ghi nhận thời gian khắc phục (Resolved Time) nếu máy vừa thoát khỏi lỗi/sự cố
+        if previous_status in ["ERROR", "LOSS", "IDLE"] and self.status == "RUNNING":
+            for err in self.error_history:
+                # Tìm lỗi gần nhất chưa được xử lý và đánh dấu đã xử lý
+                if err.get("status") == previous_status and not err.get("resolved_time"):
+                    err["resolved_time"] = datetime.now().strftime("%H:%M:%S")
+                    break
+
         # Ghi nhận lịch sử khi có sự cố: ERROR, LOSS hoặc IDLE
         if self.status in ["ERROR", "LOSS", "IDLE"] and previous_status != self.status:
             timestamp = datetime.now().strftime("%H:%M:%S")
-            
-            # Xuất toàn bộ nội dung message gốc (không tự động viết thường)
             raw_message = str(self.message).strip()
-            error_msg = raw_message if raw_message else f"Mã lỗi: {self.error_status}"
             
-            self.error_history.insert(0, {"time": timestamp, "status": self.status, "message": error_msg})
+            self.error_history.insert(0, {
+                "time": timestamp,
+                "status": self.status,
+                "code": self.error_status,
+                "message": raw_message,
+                "resolved_time": ""
+            })
             
             # Giữ tối đa 50 lỗi gần nhất để nhẹ RAM
             if len(self.error_history) > 50:

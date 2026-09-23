@@ -7,6 +7,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PyQt5.QtWidgets import QVBoxLayout
 from views.machine_dashboard_dialog import MachineDashboardDialog
+from views.global_alarms_dialog import GlobalAlarmsDialog
 
 
 class MainWindow(QMainWindow):
@@ -39,6 +40,9 @@ class MainWindow(QMainWindow):
 
         # 3. Khởi tạo giao diện Bảng
         self.setup_production_table()
+        
+        # Móc nối nút bấm Bảng tổng hợp lỗi 
+        self.btn_alarm_total.clicked.connect(self.open_global_alarms)
         
         # 4. 
         # Bật chế độ "Công tắc" cho 2 nút
@@ -258,8 +262,13 @@ class MainWindow(QMainWindow):
         if line_vm is None:
             return
         dialog = MachineDashboardDialog(line_vm, parent=self)
-        dialog.setWindowTitle(f"Machine Dashboard  —  {machine_id}")
+        dialog.setWindowTitle(f"Machine Dashboard - {machine_id}")
         dialog.exec_()   # Modal: chặn lại cho đến khi user đóng
+
+    def open_global_alarms(self):
+        """Mở Popup Bảng Lỗi Toàn Nhà Máy."""
+        dialog = GlobalAlarmsDialog(self.dashboard_vm, self)
+        dialog.exec_()
 
     def update_summary_ui(self, summary_data):      
         """Cập nhật phần Summary chung ở trên cùng."""

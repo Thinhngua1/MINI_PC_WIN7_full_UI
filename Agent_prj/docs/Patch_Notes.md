@@ -88,3 +88,16 @@ un_time).
 - Bổ sung và tinh chỉnh giao diện cho các thẻ (Line Card) để hiển thị trực quan thông số OEE Ca Ngày / Ca Đêm.
 - Căn chỉnh Layout, GroupBox và CSS (màu sắc/bố cục) để giao diện thẻ nhìn hiện đại.
 - Test tổng thể luồng UI Card khi có nhiều máy chạy song song.
+
+## [v0.3.0] - Bổ sung Dashboard con (Sub-Dashboard) cho từng máy
+### Thêm mới (Added)
+- Tạo mới file views/machine_dashboard.ui (giao diện Sub-Dashboard với 3 vùng: Sản lượng, Downtime ca, Bảng lịch sử cảnh báo).
+- Tạo class MachineDashboardDialog (trong views/machine_dashboard_dialog.py) kế thừa QDialog để hiển thị popup. Quản lý việc tự động kết nối và ngắt kết nối tín hiệu (signal_update_ui) để tránh memory leak.
+- Thêm cơ chế bắt sự kiện click trên thẻ máy (Event Filter) thông qua installEventFilter trong main_window.py (chỉ bắt ở thẻ cha card_widget, để sự kiện tự động sủi bọt từ các widget con theo chuẩn thiết kế Qt).
+- Bổ sung logic ghi nhận lịch sử trạng thái (ERROR, LOSS, IDLE) vào self.error_history bên trong line_vm.py, lưu trữ kèm cả chuỗi thông báo nguyên bản.
+
+### Thay đổi (Changed)
+- Cập nhật cấu trúc từ điển (dict) của error_history trong line_vm.py: đổi key "error" thành "message" và thêm key "status" để đồng bộ hóa với code hiển thị UI.
+
+### Kế hoạch (Planned)
+- Triển khai tính năng tổng hợp lịch sử lỗi (Bảng tóm tắt lỗi của tất cả các máy) nằm ở góc dưới bên phải của màn hình Dashboard tổng.

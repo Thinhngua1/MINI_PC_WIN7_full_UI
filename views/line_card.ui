@@ -6,14 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>370</width>
-    <height>311</height>
+    <width>267</width>
+    <height>280</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>320</width>
+    <width>250</width>
     <height>160</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>320</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -298,12 +310,12 @@ QLabel {
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>180</y>
-     <width>351</width>
+     <y>160</y>
+     <width>245</width>
      <height>112</height>
     </rect>
    </property>
@@ -318,7 +330,7 @@ QLabel {
       </property>
       <property name="maximumSize">
        <size>
-        <width>200</width>
+        <width>120</width>
         <height>16777215</height>
        </size>
       </property>
@@ -339,8 +351,8 @@ QLabel {
       <property name="checkable">
        <bool>false</bool>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,4">
@@ -492,7 +504,7 @@ QLabel {
       </property>
       <property name="maximumSize">
        <size>
-        <width>200</width>
+        <width>120</width>
         <height>16777215</height>
        </size>
       </property>
@@ -513,8 +525,8 @@ QLabel {
       <property name="checkable">
        <bool>false</bool>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_6">
-       <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_7">
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="2,4">
