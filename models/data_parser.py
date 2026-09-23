@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 from typing import Optional, Dict
 from models.data_logger import DataLoggerModel
-from models.api_publisher import ApiPublisherModel
+from models.SQL_publisher import SQLPublisherModel
 from PyQt5.QtCore  import QObject, pyqtSignal
 
 class DataParserModel(QObject):
@@ -35,7 +35,7 @@ class DataParserModel(QObject):
         self.lock = threading.Lock()
 
         self.logger = DataLoggerModel() # tạo instance cho DataLoggerModel
-        self.publisher = ApiPublisherModel() #tạo instance cho ApiPublisherModel
+        self.publisher = SQLPublisherModel() #tạo instance cho SQLPublisherModel
 
 
     def parse_csv(self, raw_data) -> Optional[Dict[str, str]]:

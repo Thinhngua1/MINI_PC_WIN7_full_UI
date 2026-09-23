@@ -101,3 +101,14 @@ un_time).
 
 ### Kế hoạch (Planned)
 - Triển khai tính năng tổng hợp lịch sử lỗi (Bảng tóm tắt lỗi của tất cả các máy) nằm ở góc dưới bên phải của màn hình Dashboard tổng.
+
+## [v0.3.1] - Bảng tổng hợp lỗi toàn nhà máy (Global Alarms)
+### Thêm mới (Added)
+- Phân tích và tạo file iews/global_alarms.ui: Popup chuẩn mực hiển thị 7 cột dữ liệu cảnh báo từ toàn bộ các máy trong nhà máy.
+- Tạo class GlobalAlarmsDialog (trong iews/global_alarms_dialog.py):
+  - Tự động vòng lặp qua tất cả các máy trong config (không bị ảnh hưởng bởi tab đang mở).
+  - Gom nhóm (aggregate) các lỗi để đếm số lần (Count), cập nhật thời gian phát sinh gần nhất và thời gian xử lý gần nhất.
+  - Phân loại trạng thái Active (Đỏ) và Resolved (Xanh lá).
+  - Tự động bắt sự kiện signal_summary_updated để cập nhật bảng Realtime.
+  - Tích hợp 2 ComboBox hỗ trợ lọc theo Tên Máy và Trạng Thái (Active/Resolved).
+- Tích hợp với giao diện chính: Khôi phục layout thẻ máy và gắn sự kiện click vào nút tn_alarm_total trên Main Window để mở Popup.

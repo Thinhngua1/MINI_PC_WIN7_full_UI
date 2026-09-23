@@ -11,6 +11,8 @@ class DashboardViewModel(QObject):
     signal_summary_updated = pyqtSignal(dict) # Phát tín hiệu (Tổng/OK/NG/wait_material,alarm, running, offline)
     signal_hourly_data = pyqtSignal(str, dict)
     signal_time = pyqtSignal(str, str)
+    # tín hiệu bắn báo cáo Teams
+    signal_send_teams = pyqtSignal(str, list)
 
     def __init__(self, machines_config): #machines_config đọc từ file config nhưng gọi từ hàm main(theo MVVM)
         super().__init__()
@@ -31,6 +33,13 @@ class DashboardViewModel(QObject):
         self.clock_timer.start(1000)
 
         self.last_minute = -1
+
+        # 1. Thêm đồng hồ báo cáo Teams (Ví dụ: 2 tiếng = 7200000 ms)
+        # Tạm thời để 120000 ms (1 phút) để em test cho nhanh
+        self.teams_timer = QTimer()
+        self.teams_timer.timeout.connect(self._generate_teams_report)
+        self.teams_timer.start(120000) 
+
 
     def handle_raw_data(self, client_id, raw_string):
         # 1. Gọi Parser dịch chuỗi -> Nhận về 1 cái Dict sạch sẽ
@@ -150,6 +159,28 @@ class DashboardViewModel(QObject):
         for machine_id, line_vm in self.lines.items():
             if hasattr(line_vm, 'tick_1_second'):
                 line_vm.tick_1_second()
+
+
+    # Thêm hàm gom data cho Team_publisher
+    def _generate_teams_report(self):
+        title = "Báo cáo sản lượng khu Robot"
+        machine_data_list = []
+        
+        for line_id, vm in self.lines.items():
+            if vm.status == "OFFLINE" or vm.status == "loss": # Em có thể tùy chỉnh trạng thái
+                status_str = "⚠️ N/A (Offline)"
+            elif vm.status == "ERROR":
+                status_str = f"❌ Lỗi ({vm.ok_count}/{vm.total_count})"
+            else:
+                status_str = f"✅ {vm.ok_count}/{vm.total_count} ({vm.status})"
+            
+            machine_data_list.append({
+                "name": f"Line {line_id}",
+                "status": status_str
+            })
+            
+        # Ném cục data ra ngoài
+        self.signal_send_teams.emit(title, machine_data_list)
 
 # ===================== đã test ok ==========
 # nếu nỗi path, dùng python -m viewmodels.dashboard_vm.

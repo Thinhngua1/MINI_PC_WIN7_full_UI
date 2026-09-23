@@ -1,5 +1,4 @@
 -- This module is used to set up I/O, variables, etc. The motion command cannot be called here.
--- Version: Lua 5.3.5-- This module is used to set up I/O, variables, etc. The motion command cannot be called here.
 -- Version: Lua 5.3.5
 while true do
   if DI(3) == 1 then pauseFlag = true end -- nút Pause

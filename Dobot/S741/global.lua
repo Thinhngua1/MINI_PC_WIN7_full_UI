@@ -3,8 +3,7 @@ a = 0
 i = 0
 Caotray_output = 0
 k = 0
-Caotray_input = 0
-b2 = 0 
+Caotray_input = 0 
 movemode = {movj = 1, movl = 2, movjio = 3, movlio = 4, relmovj = 5, relmovl = 6}
 --  Pallet
 
@@ -127,11 +126,9 @@ function PalletCreate(teachPoints, counts, resultArray)
 	 end
 end
 
-function Systime_correct()
-	current_time = Systime() // 1000 - 52*60
-end
 function pseudo_pause()
   pauseFlag = true
+  runMode = pauseMode and 'wait_material' or ''
   while DI(1) == 0 do
     Sleep(50)
   end
@@ -149,111 +146,98 @@ function MoveReadIO(mode, point, options, IO)
     pseudo_pause()
   end
 end
+function Systime_correct()
+  current_time = Systime() // 1000 - 52*60
+end
+function Vacuumon_all()
+Wait( math.ceil(0.2 * 1000) )
+DOGroup({4,1},{5,1},{6,1},{7,1})
+Wait( math.ceil(0.2 * 1000) )
+end
+
+function Vacuumoff_all()
+Wait( math.ceil(0.2 * 1000) )
+DOGroup({4,0},{5,0},{6,0},{7,0})
+Wait( math.ceil(0.2 * 1000) )
+end
+
+function VaccumphoiOFF()
+Wait( math.ceil(0.2 * 1000) )
+DOGroup({4,0},{5,0},{6,0})
+Wait( math.ceil(0.2 * 1000) )
+end
+
+function VaccumphoiON()
+Wait( math.ceil(0.2 * 1000) )
+DOGroup({4,1},{5,1},{6,1})
+Wait( math.ceil(0.2 * 1000) )
+end
+
 function Input()
   local points_Input = {}
-  PalletCreate({P3,P4,P5,P6},{3,2},points_Input)
+  PalletCreate({P3,P4,P5,P6,P25,P26,P27,P28},{2,2,2},points_Input)
 MovJ(P2)
-MoveReadIO(movemode.movj, RelPoint(points_Input[a], {0, 0, 20+(1-i)*Caotray_input, 0}))
-MoveReadIO(movemode.relmovl, {0, 0, -20, 0})
-Vaccumon( )
+MoveReadIO(movemode.movj, RelPoint(points_Input[a], {0, 0, 20 + (-i)*Caotray_input, 0}))
 Sync()
-MoveReadIO(movemode.relmovl, {0, 0, 20, 0})
-a = a + 1
-MoveReadIO(movemode.movj, P2, {CP = 100})
+MoveReadIO(movemode.movl, RelPoint(points_Input[a], {-0.3*i, 0, -i*Caotray_input, 0}))
+VaccumphoiON( )
+Wait( math.ceil(0.2 * 1000) )
+MoveReadIO(movemode.movl, RelPoint(points_Input[a], {0, 0, 20 + (-i)*Caotray_input, 0}), {SpeedL = 15})
+MoveReadIO(movemode.movj, P2)
 Sync()
 end
 
 function Output()
-  local points_Output1_24 = {}
-  PalletCreate({P8,P9,P10,P11},{4,6},points_Output1_24)
-  local points_Output25_30 = {}
-  PalletCreate({P20,P21},{3},points_Output25_30)
-  local points_Output31_36 = {}
-  PalletCreate({P22,P23},{3},points_Output31_36)
-MoveReadIO(movemode.movj, P7)
-if b<25 then
-  for count = 1, 4 do
-	MoveReadIO(movemode.movl, RelPoint(points_Output1_24[b], {0, 0, (k-2)*Caotray_output, 0}))
-    Sync()
-	DO((b-1) % 4 + 4, 0)
-    b = b + 1
-	OK = OK + 1
-    Sleep(50)
-  end
-else
-  Sync()
-  for count2 = 1, 2 do
-    if (b%2)==1 then
-	  MoveReadIO(movemode.movl, RelPoint(points_Output25_30[b2], {0, 0, (k-2)*Caotray_output, 0}))
-      DO(4,0)
-	  Sync()
-	  MoveReadIO(movemode.relmovl, {P24.coordinate[1] - P20.coordinate[1], P24.coordinate[2] - P20.coordinate[2], 0, P24.coordinate[4] - P20.coordinate[4]})
-      DO(5,0)
-    end
-    if (b%2)==0 then
-	  MoveReadIO(movemode.movl, RelPoint(points_Output31_36[b2], {0, 0, (k-2)*Caotray_output, 0}))
-      DO(6,0)
-	  Sync()
-	  MoveReadIO(movemode.relmovl, {P24.coordinate[1] - P20.coordinate[1], P24.coordinate[2] - P20.coordinate[2], 0, P24.coordinate[4] - P20.coordinate[4]})
-      DO(7,0)
-    end
-    b = b + 1
-	OK = OK + 1
-    Sleep(50)
-  end
-  b2 = b2 + 1
-end
-MoveReadIO(movemode.movj, P7)
+  local points_Output = {}
+  PalletCreate({P8,P9,P29,P11,P20,P21,P22,P23},{3,5,2},points_Output)
+MovJ(P7)
 Sync()
+MoveReadIO(movemode.movl, RelPoint(points_Output[b], {0, 0, 20 + (k-1)*Caotray_output, 0}))
+for count = 1, 3 do
+  MoveReadIO(movemode.movl, RelPoint(points_Output[b], {0, 0, (k-1)*Caotray_output, 0}))
+  if (b%3)==1 then
+    DO(4,0)
+  end
+  if (b%3)==2 then
+    DO(5,0)
+  end
+  if (b%3)==0 then
+    DO(6,0)
+  end
+  b = b + 1
+  OK = OK + 1
+  Sleep(50)
+end
+a = a + 1
+MoveReadIO(movemode.movj, P7)
 end
 
 function Thay_input()
 MoveReadIO(movemode.movj, P12)
-MoveReadIO(movemode.movl, RelPoint(P13, {0, 0, (1-i)*Caotray_input, 0}))
-Vaccumon( )
-DO(9,1)
-Wait( math.ceil(0.5 * 1000) )
-MoveReadIO(movemode.movl, P12, {SpeedL = 11})
-MoveReadIO(movemode.movj, P14, {SpeedJ = 20})
-MoveReadIO(movemode.movl, RelPoint(P15, {0, 0, (i-1)*Caotray_input, 0}))
-Vaccumoff( )
-DO(9,0)
+Sync()
+MoveReadIO(movemode.movl, RelPoint(P13, {0, 0, -i*Caotray_input, 0}))
+Vacuumon_all( )
 Wait( math.ceil(0.2 * 1000) )
-MoveReadIO(movemode.movl, P14, {CP = 100})
+MoveReadIO(movemode.movl, P12, {SpeedL = 16})
+MoveReadIO(movemode.movj, P14, {SpeedJ = 9})
+MoveReadIO(movemode.movl, RelPoint(P15, {0, 0, i*Caotray_input, 0}))
+Vacuumoff_all( )
+MoveReadIO(movemode.movl, P14)
 i = i + 1
 Sync()
 end
 
 function Thay_output()
-MoveReadIO(movemode.movj, P16, {CP = 100})
-MoveReadIO(movemode.movl, RelPoint(P17, {0, 0, (1-k)*Caotray_output, 0}))
-Vaccumon( )
-DO(9,1)
-Wait( math.ceil(0.5 * 1000) )
-MoveReadIO(movemode.movl, P16, {SpeedL = 10})
-MoveReadIO(movemode.movj, P18, {SpeedJ = 20})
-MoveReadIO(movemode.movl, RelPoint(P19, {0, 0, (k-1)*Caotray_output, 0}))
-Vaccumoff( )
-DO(9,0)
-Move(P18)
+MoveReadIO(movemode.movj, P16)
+MoveReadIO(movemode.movl, RelPoint(P17, {0, 0, -k*Caotray_output, 0}))
+Vacuumon_all( )
+Wait( math.ceil(0.2 * 1000) )
+MoveReadIO(movemode.movl, P16, {AccL = 20, SpeedL = 60})
+MoveReadIO(movemode.movj, P18, {SpeedJ = 33})
+MoveReadIO(movemode.movl, RelPoint(P19, {0, 0, k*Caotray_output, 0}))
+Vacuumoff_all( )
+Wait( math.ceil(0.2 * 1000) )
+MoveReadIO(movemode.movl, P18)
 k = k + 1
 Sync()
-end
-
-function Vaccumoff()
-Wait( math.ceil(0.2 * 1000) )
-DO(4,0)
-DO(5,0)
-DO(6,0)
-DO(7,0)
-Wait( math.ceil(0.2 * 1000) )
-end
-
-function Vaccumon()
-Wait( math.ceil(0.2 * 1000) )
-DO(4,1)
-DO(5,1)
-DO(6,1)
-DO(7,1)
-Wait( math.ceil(0.2 * 1000) )
 end

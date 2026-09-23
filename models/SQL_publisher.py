@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from PyQt5.QtCore  import QObject, pyqtSignal
 
-class ApiPublisherModel(QObject):
+class SQLPublisherModel(QObject):
     signal_log_updated = pyqtSignal(str)
 
     def __init__(self):      

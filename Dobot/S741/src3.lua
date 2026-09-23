@@ -3,7 +3,7 @@
 local cleared = false
 while true do
   Systime_correct()
-  if current_time%86400 >= 28809 and current_time <= 28811 and not cleared then
+  if current_time%86400 >= 28809 and current_time%86400 <= 28811 and not cleared then --tự động reset vào lúc 8h sáng hàng ngày
     OK = 0
     NG = 0
     total = 0
