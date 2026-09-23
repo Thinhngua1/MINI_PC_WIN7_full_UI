@@ -2,11 +2,15 @@ import sys
 import json
 from PyQt5.QtWidgets import QApplication
 
+# Fix loi in tieng Viet tren Windows Console
+sys.stdout.reconfigure(encoding='utf-8')
+
 # 1. Import các lớp Models
 from models.tcp_server import TcpServerModel
 from models.data_parser import DataParserModel
-from models.api_publisher import ApiPublisherModel
+from models.SQL_publisher import SQLPublisherModel
 from models.tcp_client_manager import TcpClientManager
+from models.Team_publisher import TeamPublisher
 
 # 2. Import các lớp ViewModels
 from viewmodels.dashboard_vm import DashboardViewModel
@@ -86,6 +90,14 @@ def main():
     # Bắt đầu Server TCP chạy ngầm
     tcp_server.start()
     print(f"He thong da san sang lang nghe o cong {tcp_port}!")
+
+    # gửi data lên team
+    # Nhập đường link Webhook của team
+    teams_webhook_url = "https://default9b3519dd51ef4d4cbac3abb36b7c63.58.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/14/workflows/5c5afdc4b48045aaaf12ab25bcc2c51f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TIExcsFU5zbd7-uBuCuyV9b8-i4o0rkVUUe_B26xrC0"
+    main_window.team_publisher = TeamPublisher(teams_webhook_url)
+    
+    # Cắm dây: Khi DashboardVM kêu báo cáo -> TeamPublisher mang đi gửi
+    dashboard_vm.signal_send_teams.connect(main_window.team_publisher.send_report)
     
     # Chạy vòng lặp UI
     sys.exit(app.exec_())
