@@ -1,4 +1,4 @@
-
+import os
 import requests
 import json
 from datetime import datetime
@@ -28,9 +28,23 @@ class TeamWorker(QThread):
             self.signal_result.emit(False, f"Lỗi Exception: {str(e)}")
 
 class TeamPublisher(QObject):
-    def __init__(self, webhook_url):
+    def __init__(self):
         super().__init__()
-        self.webhook_url = webhook_url
+        self.webhook_url = ""
+
+    def load_webhook_from_security(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        secret_path = os.path.join(current_dir, "..", "security", "secrets.json")
+        
+        if os.path.exists(secret_path):
+            try:
+                with open(secret_path, "r", encoding="utf-8") as f:
+                    secret_data = json.load(f)
+                    self.webhook_url = secret_data.get("teams_webhook", "")
+            except Exception as e:
+                print(f"Lỗi đọc file secrets.json: {e}")
+        else:
+            print(f"Cảnh báo: Không tìm thấy file bảo mật tại {secret_path}")
 
     def send_report(self, title, machine_data_list):
         """

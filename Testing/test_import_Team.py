@@ -4,9 +4,8 @@ import requests
 import json
 from datetime import datetime
 
-# 1. Dán đường link Webhook của em vào đây
-webhook_url = "https://default9b3519dd51ef4d4cbac3abb36b7c63.58.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/14/workflows/5c5afdc4b48045aaaf12ab25bcc2c51f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TIExcsFU5zbd7-uBuCuyV9b8-i4o0rkVUUe_B26xrC0"
-
+# 1. Dán đường link Webhook  vào đây
+webhook_url = ""
 # Lấy giờ hiện tại
 now_str = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 

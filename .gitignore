@@ -1,0 +1,7 @@
+Security/LOG/
+LOG_Fix/
+dist/
+build/
+*.spec
+__pycache__/
+.venv*/

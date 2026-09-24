@@ -95,9 +95,7 @@ def main():
     print(f"He thong da san sang lang nghe o cong {tcp_port}!")
 
     # gửi data lên team
-    # Nhập đường link Webhook của team
-    teams_webhook_url = "https://default9b3519dd51ef4d4cbac3abb36b7c63.58.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/14/workflows/5c5afdc4b48045aaaf12ab25bcc2c51f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TIExcsFU5zbd7-uBuCuyV9b8-i4o0rkVUUe_B26xrC0"
-    main_window.team_publisher = TeamPublisher(teams_webhook_url)
+    main_window.team_publisher = TeamPublisher()
     
     # Cắm dây: Khi DashboardVM kêu báo cáo -> TeamPublisher mang đi gửi
     dashboard_vm.signal_send_teams.connect(main_window.team_publisher.send_report)
