@@ -11,8 +11,13 @@ class DataLoggerModel:
         # 1. Xác định đường dẫn tuyệt đối đến thư mục LOG (Dùng os.path)
         self.today_str = datetime.now().strftime("%Y-%m-%d")
 
-        self.dir = os.path.dirname(os.path.abspath(__file__))   # .../models
-        self.parent_dir = os.path.dirname(self.dir)             # thư mục gốc của project
+        import sys
+        if getattr(sys, 'frozen', False):
+            self.dir = os.path.dirname(sys.executable)
+            self.parent_dir = self.dir
+        else:
+            self.dir = os.path.dirname(os.path.abspath(__file__))   # .../models
+            self.parent_dir = os.path.dirname(self.dir)             # thư mục gốc của project
 
        
         # 3. Tạo đường dẫn file hoàn chỉnh (nối thư mục LOG và tên file)

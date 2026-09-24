@@ -81,7 +81,7 @@ class ProductionViewModel(QObject):
     
     # Hàm HỨNG SIGNAL từ trạm đấu dây
     def save_hourly_snapshot(self, hour_str, snapshot_data):
-        print(f"[Production] Nhận snapshot lúc {hour_str}, đang lưu...")
+        print(f"[Production] Nhan snapshot luc {hour_str}, dang luu...")
         
         for machine_id, counters in snapshot_data.items():
             if machine_id not in self.daily_data:
@@ -164,35 +164,40 @@ class ProductionViewModel(QObject):
         file_path = os.path.join(self.log_dir, f"production_{date_str}.json")
         
         if os.path.exists(file_path):
-            with open(file_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
 
-            # --- VIEWMODEL TỰ NHAI DATA ---
-            table_rows = []
-            
-            for machine_id, hourly_data in data.items():
-                sum_total_day = 0
-                row_data = [machine_id]
+                # --- VIEWMODEL TỰ NHAI DATA ---
+                table_rows = []
                 
-                # Lặp qua các khung giờ để lôi con số ra (đã làm tròn/format nếu cần)
-                dict_hour = hourly_data["Hourly"]
-                for _,quantity in dict_hour.items():
-                    quantity_of_hour = int(quantity["total"])
-                    sum_total_day += quantity_of_hour
+                for machine_id, hourly_data in data.items():
+                    sum_total_day = 0
+                    row_data = [machine_id]
+                    
+                    # Lặp qua các khung giờ để lôi con số ra (đã làm tròn/format nếu cần)
+                    dict_hour = hourly_data["Hourly"]
+                    for _,quantity in dict_hour.items():
+                        quantity_of_hour = int(quantity["total"])
+                        sum_total_day += quantity_of_hour
 
-                    row_data.append(quantity_of_hour)
+                        row_data.append(quantity_of_hour)
 
-                # Cột 26: Thêm tổng cả ngày vào cuối cùng
-                row_data.append(str(sum_total_day))
+                    # Cột 26: Thêm tổng cả ngày vào cuối cùng
+                    row_data.append(str(sum_total_day))
 
-                # tạo list 2D full line
-                table_rows.append(row_data)
+                    # tạo list 2D full line
+                    table_rows.append(row_data)
+                    
+                self.signal_table_data_ready.emit(True, f"{date_str} | Tải dữ liệu thành công.", table_rows)                
+                # Chỉ ném Mảng 2 chiều của biểu đồ sang cho View
+
+            except Exception as e:
+                # NẾU FILE LỖI (Corrupted / Sai format): Bắt sống lỗi và quăng lên UI, tuyệt đối KHÔNG cho sập app!
+                self.signal_table_data_ready.emit(False, f"{date_str} | Loi doc file: {e}", [])
                 
-            self.signal_table_data_ready.emit(True, f"{date_str} | Tải dữ liệu thành công.", table_rows)                
-            # Chỉ ném Mảng 2 chiều của biểu đồ sang cho View
-
         else:
-            self.signal_table_data_ready.emit(False, f"{date_str} | Không có dữ liệu lịch sử.", {})
+            self.signal_table_data_ready.emit(False, f"{date_str} | Khong co du lieu lich su.", [])
 
 
         

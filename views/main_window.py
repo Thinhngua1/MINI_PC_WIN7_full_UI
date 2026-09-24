@@ -358,22 +358,41 @@ class MainWindow(QMainWindow):
         
         if is_success:
             self.lbl_data_file_status.setStyleSheet("color: #00ff00;") # Màu xanh
-            # Lặp qua mảng 2 chiều
-            for row_idx, row_data in enumerate(list_2D):
-                # Cột 0 là tên Máy, ta bỏ qua vì đã cố định rồi. Chỉ ghi đè từ cột 1 trở đi
-                for col_idx in range(1, len(row_data)):
-                    val_str = str(row_data[col_idx])
-                    # Lấy ô giao diện ra và cập nhật giá trị
-                    self.tbl_production.item(row_idx, col_idx).setText(val_str)               
-            
+            row_map = {}
+            for r in range(self.tbl_production.rowCount()):
+                item = self.tbl_production.item(r, 0)
+                if item:
+                    row_map[item.text()] = r
+
+            for row_data in list_2D:
+                machine_id = str(row_data[0])
+                if machine_id in row_map:
+                    target_row = row_map[machine_id]
+                    for col_idx in range(1, len(row_data)):
+                        val_str = str(row_data[col_idx])
+                        item = self.tbl_production.item(target_row, col_idx)
+                        if item is None:
+                            from PyQt5.QtWidgets import QTableWidgetItem
+                            from PyQt5.QtCore import Qt
+                            new_item = QTableWidgetItem(val_str)
+                            new_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                            self.tbl_production.setItem(target_row, col_idx, new_item)
+                        else:
+                            item.setText(val_str)
         else:
             self.lbl_data_file_status.setStyleSheet("color: #ff0000;") # Màu đỏ
-            # Clear bảng: Đưa tất cả số liệu về "0"
             for row in range(self.tbl_production.rowCount()):
                 for col in range(1, self.tbl_production.columnCount()):
-                    self.tbl_production.item(row, col).setText("0")
-                    # Tự động Refresh biểu đồ nếu đang có một máy được chọn
-      
+                    item = self.tbl_production.item(row, col)
+                    if item is None:
+                        from PyQt5.QtWidgets import QTableWidgetItem
+                        from PyQt5.QtCore import Qt
+                        new_item = QTableWidgetItem("0")
+                        new_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                        self.tbl_production.setItem(row, col, new_item)
+                    else:
+                        item.setText("0")
+
         if hasattr(self, 'current_machine') and self.current_machine:
             # Quét tìm cái máy đang được chọn nằm ở hàng (row) số mấy
             for row in range(self.tbl_production.rowCount()):
