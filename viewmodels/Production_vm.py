@@ -65,9 +65,9 @@ class ProductionViewModel(QObject):
                 import json # (Nếu ở đầu file chưa import json thì thêm vào nhé)
                 with open(today_file, 'r', encoding='utf-8') as f:
                     self.daily_data = json.load(f) # Nơi chứa Data thực tế của tất cả các máy
-                print("Đã khôi phục dữ liệu Production từ ổ cứng!")
+                print("Da khoi phuc thanh cong du lieu tu o cung!")
             except Exception as e:
-                print(f"Lỗi đọc file lúc khởi động: {e}")
+                print(f"Loi doc file luc khoi dong: {e}")
                 self.daily_data = {} 
 
         else: 
@@ -107,8 +107,7 @@ class ProductionViewModel(QObject):
         
         self.save_to_disk()
 
-
-        print(f"Đã lưu Snapshot {hour_str}. Đang bắn sang UI để Refresh...")
+        print(f"Da luu Snapshot {hour_str}. Dang ban sang UI de refresh")
         
         # ============ THÊM ĐOẠN NÀY ĐỂ UI TỰ REFRESH ============
         table_rows = []

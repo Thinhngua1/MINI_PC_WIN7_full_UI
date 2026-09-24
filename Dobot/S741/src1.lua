@@ -3,11 +3,12 @@
 local ip = "192.168.10.5" --ip máy tính
 local port = 8500
 local shift = 0
-local interval = 10 --thời gian gửi data, tính theo giây (s)
+local interval = 300 --thời gian gửi data, tính theo giây (s)
 local NG = 0
 local cleared = false
--- khóa chu kỳ gửi data 1 lần / current_time%interval
-local last_send_slot = -1
+
+local last_periodic_time = 0
+local previous_di3 = 0
 
 
 while true do
@@ -28,21 +29,24 @@ while true do
   while true do
     local ack = {}
     Systime_correct()
-    local current_slot = current_time // interval
-    local in_send_window = (current_time % interval) < 5
+    local di3_pressed = (DI(3) == 1 and previous_di3 == 0)
+    local periodic_due = (current_time - last_periodic_time >= interval)
 
-    while last_send_slot == current_slot or (not in_send_window and DI(3) ~= 1 and runMode == '') do
-      Sleep(50)
-      Systime_correct()
+    if periodic_due or di3_pressed then
 
-      current_slot = current_time // interval
-      in_send_window = (current_time % interval) < 5
+      print(os.date('%c',current_time))
+      total = OK + NG
+      rate = (total == 0) and 0 or OK / total
+      local msg = string.format('%s,%s,%d,%d,%d,%.2f,%d,Change Tray,%s',name, model, total, OK, NG, rate*100, shift, runMode)
+    
+      local err = TCPWrite(socket, msg)
+    -- confirm TCPwrite
+    if err ~= 0 then
+      print('TCPWrite failed, reconnecting')
+      TCPDestroy(socket)
+      Sleep(1000)
+      goto create_server
     end
-    print(os.date('%c',current_time))
-    total = OK + NG
-    rate = (total == 0) and 0 or OK / total
-    local msg = string.format('%s,%s,%d,%d,%d,%.2f,%d,Change Tray,%s',name, model, total, OK, NG, rate*100, shift, runMode)
-    TCPWrite(socket, msg)
     -- ack = select(2, TCPRead(socket, 0, 'string'))
     -- print(ack)
 
@@ -54,9 +58,11 @@ while true do
     --   goto create_server
     -- end
 
-      -- Khóa không cho gửi lại trong cùng chu kỳ
-    last_send_slot = current_slot
-
-    while DI(3) == 1 do Sleep(50) end
+    -- update khi gửi thành công 1  lần
+    if periodic_due then 
+      last_periodic_time = current_time
+    end 
+    previous_di3 = DI(3)  
   end
+end
 end

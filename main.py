@@ -3,7 +3,10 @@ import json
 from PyQt5.QtWidgets import QApplication
 
 # Fix loi in tieng Viet tren Windows Console
-sys.stdout.reconfigure(encoding='utf-8')
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+except AttributeError:
+    pass
 
 # 1. Import các lớp Models
 from models.tcp_server import TcpServerModel

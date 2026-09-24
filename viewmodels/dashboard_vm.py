@@ -34,11 +34,10 @@ class DashboardViewModel(QObject):
 
         self.last_minute = -1
 
-        # 1. Thêm đồng hồ báo cáo Teams (Ví dụ: 2 tiếng = 7200000 ms)
-        # Tạm thời để 120000 ms (1 phút) để em test cho nhanh
+        # 1. Thêm đồng hồ báo cáo Teams (1 tiếng = 3600000 ms)
         self.teams_timer = QTimer()
         self.teams_timer.timeout.connect(self._generate_teams_report)
-        self.teams_timer.start(120000) 
+        self.teams_timer.start(3600000) 
 
 
     def handle_raw_data(self, client_id, raw_string):
