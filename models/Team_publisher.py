@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import sys
 from datetime import datetime
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
@@ -31,11 +32,21 @@ class TeamPublisher(QObject):
     def __init__(self):
         super().__init__()
         self.webhook_url = ""
+        self.load_webhook_from_security()
 
     def load_webhook_from_security(self):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        secret_path = os.path.join(current_dir, "..", "security", "secrets.json")
-        
+
+        # Cấu hình đường dẫn thông minh: Chấp cả lúc chạy code Python lẫn lúc chạy file .exe
+        if getattr(sys, 'frozen', False):
+            # Nếu là file .exe, tìm thư mục security nằm ngay cạnh file .exe
+            base_dir = os.path.dirname(sys.executable)
+        else:
+            # Nếu chạy trên VS Code, lùi ra 1 cấp từ thư mục models
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            base_dir = os.path.dirname(current_dir)
+            
+        secret_path = os.path.join(base_dir, "security", "secrets.json")
+
         if os.path.exists(secret_path):
             try:
                 with open(secret_path, "r", encoding="utf-8") as f:
