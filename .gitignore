@@ -1,7 +1,9 @@
-Security/LOG/
+Security/
+LOG/
 LOG_Fix/
 dist/
 build/
 *.spec
 __pycache__/
+*.pyc
 .venv*/

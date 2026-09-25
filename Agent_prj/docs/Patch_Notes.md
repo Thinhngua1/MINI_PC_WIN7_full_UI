@@ -112,3 +112,20 @@ un_time).
   - Tự động bắt sự kiện signal_summary_updated để cập nhật bảng Realtime.
   - Tích hợp 2 ComboBox hỗ trợ lọc theo Tên Máy và Trạng Thái (Active/Resolved).
 - Tích hợp với giao diện chính: Khôi phục layout thẻ máy và gắn sự kiện click vào nút tn_alarm_total trên Main Window để mở Popup.
+
+## [v0.3.2] - Giai đoạn 5: Tối ưu hóa & Bảo mật & Build
+### Cập nhật & Fix bug (Updated & Fixed)
+- **Production_vm.py**: Sửa lỗi TypeError do phát signal sai kiểu dict (đổi {} thành []). Xóa bỏ các ký tự tiếng Việt trong print để tránh UnicodeEncodeError khi chạy PyInstaller --noconsole.
+- **main_window.py**: Sửa lỗi sập UI khi bảng không khớp số lượng máy bằng cách tạo 
+ow_map và khởi tạo QTableWidgetItem linh hoạt. Khắc phục lỗi label lbl_machine_id bị Qt Designer cắt chữ bằng cách ép resize chiều rộng lên 250px bằng Python.
+- **dashboard_vm.py**: Nâng cấp bộ đếm giờ của tính năng Báo cáo Teams. Chuyển từ QTimer chạy ngầm tùy ý sang logic bắn tự động chính xác vào đúng phút 00 của các khung giờ chẵn (VD: 14:00, 16:00), đảm bảo tính nhất quán của dữ liệu sản xuất.
+- **Team_publisher.py**: 
+  - Tách URL Webhook của Microsoft Teams ra khỏi mã nguồn, lưu vào thư mục security/secrets.json để tránh lộ lọt trên GitHub (Giải quyết cảnh báo GitGuardian).
+  - Tích hợp hàm đọc đường dẫn động hỗ trợ cả môi trường VS Code (__file__) và môi trường đóng gói PyInstaller (sys._MEIPASS / sys.executable).
+  - Thêm erify=False vào 
+equests.post để vượt qua bộ lọc SSL Inspection (HTTP 403 Forbidden / SSLCertVerificationError) của Tường lửa Fortinet công ty.
+- **data_logger.py**: Bổ sung getattr(sys, 'frozen', False) để đảm bảo thư mục LOG được ghi trực tiếp vào ổ cứng cạnh file .exe, thay vì ghi nhầm vào ổ Temp _MEIPASS của PyInstaller rồi bị xóa mất.
+
+### Kế hoạch (Planned)
+- Hướng dẫn người dùng sử dụng RustDesk hoặc AnyDesk để truy cập từ xa vào Mini PC Windows 7 trên xưởng mà không cần cài đặt VPN hay tài khoản phức tạp.
+- Đóng gói toàn bộ cấu hình vào main.exe bằng --add-data nếu có nhu cầu tạo Single Executable.

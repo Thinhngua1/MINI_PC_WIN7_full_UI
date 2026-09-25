@@ -46,7 +46,7 @@ QLabel {
     <rect>
      <x>11</x>
      <y>11</y>
-     <width>65</width>
+     <width>251</width>
      <height>19</height>
     </rect>
    </property>

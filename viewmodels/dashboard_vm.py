@@ -34,12 +34,6 @@ class DashboardViewModel(QObject):
 
         self.last_minute = -1
 
-        # 1. Thêm đồng hồ báo cáo Teams (1 tiếng = 3600000 ms)
-        self.teams_timer = QTimer()
-        self.teams_timer.timeout.connect(self._generate_teams_report)
-        self.teams_timer.start(3600000) 
-
-
     def handle_raw_data(self, client_id, raw_string):
         # 1. Gọi Parser dịch chuỗi -> Nhận về 1 cái Dict sạch sẽ
         clean_dict = self.parser.parse_csv(raw_string)
@@ -150,6 +144,10 @@ class DashboardViewModel(QObject):
             
             # Phát tín hiệu 
             self.signal_hourly_data.emit(hour_str, snapshot_data)
+            # Hễ đúng tròn phút (m=0) và đúng giờ chẵn (h chia hết cho 2) thì gửi Teams
+            if m == 0 and h % 2 == 0:
+                self._generate_teams_report()
+                
         self.signal_time.emit(time_str,shift_str)
 
                 # ==========================================

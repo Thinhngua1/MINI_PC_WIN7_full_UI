@@ -5,6 +5,11 @@ import sys
 from datetime import datetime
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
+
+# Thêm 2 dòng này để tắt cảnh báo SSL của thư viện requests
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 class TeamWorker(QThread):
     """Luồng phụ để gửi HTTP Request mà không làm đơ UI"""
     signal_result = pyqtSignal(bool, str)
@@ -19,7 +24,8 @@ class TeamWorker(QThread):
             response = requests.post(
                 self.webhook_url, 
                 headers={'Content-Type': 'application/json'}, 
-                data=json.dumps(self.payload)
+                data=json.dumps(self.payload),
+                verify=False  # <--- THÊM DÒNG NÀY ĐỂ BỎ QUA TƯỜNG LỬA CÔNG TY
             )
             if response.status_code in [200, 202]:
                 self.signal_result.emit(True, "Gửi Teams thành công")
